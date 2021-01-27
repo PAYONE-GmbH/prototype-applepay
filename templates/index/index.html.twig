@@ -53,7 +53,7 @@
     <script>
         function payWithApplePay() {
             const session = new ApplePaySession(3, {
-                countryCode: 'DE',
+                countryCode: 'AT',
                 currencyCode: 'EUR',
                 supportedNetworks: ['visa', 'masterCard', 'amex', 'discover'],
                 merchantCapabilities: ['supports3DS'],
@@ -64,10 +64,19 @@
                 fetch('{{ path('create_apple_pay_session') }}', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ validation_url: 'https://apple-pay-gateway.apple.com' }),
+                    cache: 'no-cache',
+                }).then(response => {
+                    if (response.status !== 201) {
+                        console.error('Error while creating Apple Pay session.')
+                        return;
+                    }
 
+                    response.json().then(merchantSession => {
+                        console.log('Got merchant session from Apple Pay.', merchantSession)
+                        session.completeMerchantValidation(merchantSession)
+                    })
                 })
-
-                console.log('Yeahh!');
             }
 
             session.begin()
