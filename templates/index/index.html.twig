@@ -51,6 +51,17 @@
 
 {% block javascripts %}
     <script>
+        const $debugDump = document.querySelector('#debug-dump')
+
+        function writeDebug(message, data) {
+            if (!message) message = '';
+            if (!data) data = '';
+
+            $debugDump.innerHTML += 'Message: ' + message + '\n'
+            $debugDump.innerHTML += JSON.stringify(data, undefined, '  ')
+            $debugDump.innerHTML += '\n\n=====\n\n'
+        }
+
         function payWithApplePay() {
             const session = new ApplePaySession(3, {
                 countryCode: 'AT',
@@ -69,18 +80,20 @@
                 }).then(response => {
                     if (response.status !== 201) {
                         console.error('Error while creating Apple Pay session.')
+                        writeDebug('ERROR: Failed to create Apple Pay session.', response)
                         return;
                     }
 
                     response.json().then(merchantSession => {
                         console.log('Got merchant session from Apple Pay.', merchantSession)
+                        writeDebug('SUCCESS: Created Apple Pay session.', merchantSession)
                         session.completeMerchantValidation(merchantSession)
                     })
                 })
             }
 
             session.onpaymentauthorized = (evt) => {
-                console.log('Payment was authorized by the human being.', evt)
+                writeDebug('SUCCESS: Payment was authorized.', evt.payment)
 
                 fetch('{{ path('create_apple_pay_payment') }}', {
                     method: 'POST',
@@ -93,11 +106,13 @@
                 }).then(response => {
                     if (response.status !== 201) {
                         console.error('Error while finishing Apple Pay payment with PSP.')
+                        writeDebug('ERROR: Failed communication with PSP.', response)
                         return;
                     }
 
                     response.json().then(data => {
                         console.log('Successfully finished Apple Pay payment with PSP.', data)
+                        writeDebug('SUCCESS: Successfully finished Apple Pay payment with PSP.', data)
                         session.completePayment({
                             status: ApplePaySession.STATUS_SUCCESS,
                             errors: [],
@@ -108,13 +123,30 @@
 
             session.begin()
         }
+
+        writeDebug('Click the Apple Pay button to initiate the demo payment.');
     </script>
 {% endblock %}
 
 {% block body %}
-    <div class="apple-pay-button apple-pay-button-black" onclick="payWithApplePay()">
-        <span style="color: white">APFELZAHLUNG!11!!!</span>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button class="apple-pay-button apple-pay-button-black" onclick="payWithApplePay()"></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <p id="debug-message"></p>
+                    <pre style="width: 90%; min-height: 800px; margin: 50px auto; border: 1px solid grey;" id="debug-dump"></pre>
+                </div>
+            </div>
+        </div>
     </div>
+
+
+
 
     <script>
 
