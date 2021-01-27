@@ -72,4 +72,14 @@ class IndexController extends AbstractController
 
         return $this->json($merchantSession, 201);
     }
+
+    #[Route('/api/apple-pay/payment', name: 'create_apple_pay_payment', methods: ['POST'])]
+    public function createApplePayPayment(Request $request): JsonResponse
+    {
+        // Stubbed
+
+        return $this->json([
+            'success' => true,
+        ], 201);
+    }
 }

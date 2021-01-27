@@ -81,6 +81,29 @@
 
             session.onpaymentauthorized = (evt) => {
                 console.log('Payment was authorized by the human being.', evt)
+
+                fetch('{{ path('create_apple_pay_payment') }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        token: evt.payment.token,
+                        // todo: make use of shippingDetails, billingDetails
+                    }),
+                    cache: 'no-cache',
+                }).then(response => {
+                    if (response.status !== 201) {
+                        console.error('Error while finishing Apple Pay payment with PSP.')
+                        return;
+                    }
+
+                    response.json().then(data => {
+                        console.log('Successfully finished Apple Pay payment with PSP.', data)
+                        session.completePayment({
+                            status: ApplePaySession.STATUS_SUCCESS,
+                            errors: [],
+                        })
+                    })
+                })
             }
 
             session.begin()
