@@ -79,6 +79,10 @@
                 })
             }
 
+            session.onpaymentauthorized = (evt) => {
+                console.log('Payment was authorized by the human being.', evt)
+            }
+
             session.begin()
         }
     </script>
