@@ -79,10 +79,10 @@
 
         function payWithApplePay() {
             const session = new ApplePaySession(3, {
-                countryCode: 'AT',
+                countryCode: 'DE',
                 currencyCode: 'EUR',
-                supportedNetworks: ['visa', 'masterCard', 'amex', 'discover'],
-                merchantCapabilities: ['supports3DS'],
+                supportedNetworks: ['visa', 'masterCard', 'amex', 'discover', 'girocard'],
+                merchantCapabilities: ['supports3DS', 'supportsDebit', 'supportsCredit'],
                 total: { label: 'PAYONE Apple Pay Prototypers', amount: '10.00' },
             })
 
