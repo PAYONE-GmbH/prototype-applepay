@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Cakasim\Payone\Sdk\Api\Client\ClientExceptionInterface;
+use Cakasim\Payone\Sdk\Api\Client\ErrorResponseExceptionInterface;
 use Cakasim\Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRequest;
 use Cakasim\Payone\Sdk\Api\Message\Response as PayoneResponse;
 use Cakasim\Payone\Sdk\Sdk;
@@ -122,29 +124,27 @@ class IndexController extends AbstractController
 
         $payoneResponse = new PayoneResponse();
 
-        $this->payoneSdk->getApiService()->sendRequest($payoneRequest, $payoneResponse);
-
-//        try {
-//            $this->payoneSdk->getApiService()->sendRequest($payoneRequest, $payoneResponse);
-//        } catch (ClientException $e) {
-//            return $this->json([
-//                'success' => false,
-//                'error' => [
-//                    'type'    => 'sdk_client_error',
-//                    'message' => $e->getMessage(),
-//                ],
-//            ], 502);
-//        } catch (ErrorResponseExceptionInterface $e) {
-//            return $this->json([
-//                'success' => false,
-//                'error' => [
-//                    'type'             => 'payone_api_error',
-//                    //'message'          => $e->getMessage(),
-//                    'customer_message' => $e->getCustomerMessage(),
-//                    'code'             => $e->getCode(),
-//                ],
-//            ], 400);
-//        }
+        try {
+            $this->payoneSdk->getApiService()->sendRequest($payoneRequest, $payoneResponse);
+        } catch (ClientExceptionInterface $e) {
+            return $this->json([
+                'success' => false,
+                'error' => [
+                    'type'    => 'sdk_client_error',
+                    'message' => $e->getMessage(),
+                ],
+            ], 502);
+        } catch (ErrorResponseExceptionInterface $e) {
+            return $this->json([
+                'success' => false,
+                'error' => [
+                    'type'             => 'payone_api_error',
+                    'message'          => $e->getMessage(),
+                    'customer_message' => $e->getCustomerMessage(),
+                    'code'             => $e->getCode(),
+                ],
+            ], 400);
+        }
 
         return $this->json([
             'success' => true,
