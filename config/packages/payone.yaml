@@ -11,7 +11,7 @@ payone:
         key:            '%env(PAYONE_KEY)%'
 
         # The hashing method used to hash your API key, either "md5" or "sha384".
-        key_hash_type: sha384
+        key_hash_type: md5
 
         # The name of your app.
         integrator_name: ApplePayDemo
