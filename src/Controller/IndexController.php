@@ -102,6 +102,7 @@ class IndexController extends AbstractController
             // Other mandatory parameters
             'lastname'     => 'Demo',
             'firstname'    => 'Dieter',
+            'country'      => 'DE',
 
             // Special Apple Pay platform parameters
             'add_paydata[paymentdata_token_version]'             => $tokenData['paymentData']['version'] ?? 'EC_v1',
