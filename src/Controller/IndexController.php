@@ -2,6 +2,11 @@
 
 namespace App\Controller;
 
+use Cakasim\Payone\Sdk\Api\Client\ClientException;
+use Cakasim\Payone\Sdk\Api\Client\ErrorResponseExceptionInterface;
+use Cakasim\Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRequest;
+use Cakasim\Payone\Sdk\Api\Message\Response as PayoneResponse;
+use Cakasim\Payone\Sdk\Sdk;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpClient\HttpClient;
@@ -15,8 +20,9 @@ class IndexController extends AbstractController
 {
     private CurlHttpClient $httpClient;
 
-    public function __construct()
-    {
+    public function __construct(
+        private Sdk $payoneSdk,
+    ) {
         $this->httpClient = new CurlHttpClient();
     }
 
@@ -76,11 +82,74 @@ class IndexController extends AbstractController
     #[Route('/api/apple-pay/payment', name: 'create_apple_pay_payment', methods: ['POST'])]
     public function createApplePayPayment(Request $request): JsonResponse
     {
-        // Stubbed
+        $data = $request->toArray();
+
+        $authorizationMethod = $data['authorization_method'] ?? 'preauthorization';
+        $amount = $data['amount'] ?? 100;
+        $currency = 'EUR';
+        $tokenData = $data['token'] ?? [];
+
+        $cardTypeMappings = [
+            'visa'       => 'V',
+            'mastercard' => 'M',
+            'girocard'   => 'G',
+            'default'    => '?',
+        ];
+
+        $payoneRequest = new PayoneAuthorizationRequest([
+            // https://docs.payone.com/pages/viewpage.action?spaceKey=PLATFORM&title=Special+Remarks+-+Apple+Pay
+            'request'      => $authorizationMethod,
+            'clearingtype' => 'wlt',
+            'wallettype'   => 'APL',
+            'cardtype'     => $cardTypeMappings[strtolower($tokenData['paymentMethod']['network'] ?? 'default')],
+
+            // Other mandatory parameters
+            'lastname'     => 'Demo',
+            'firstname'    => 'Dieter',
+
+            // Special Apple Pay platform parameters
+            'add_paydata[paymentdata_token_version]'             => $tokenData['paymentData']['version'] ?? 'EC_v1',
+            'add_paydata[paymentdata_token_data]'                => $tokenData['paymentData']['data'] ?? '',
+            'add_paydata[paymentdata_token_signature]'           => $tokenData['paymentData']['signature'] ?? '',
+            'add_paydata[paymentdata_token_ephemeral_publickey]' => $tokenData['paymentData']['header']['ephemeralPublicKey'] ?? '',
+            'add_paydata[paymentdata_token_publickey_hash]'      => $tokenData['paymentData']['header']['publicKeyHash'] ?? '',
+            'add_paydata[paymentdata_token_transaction_id]'      => $tokenData['paymentData']['header']['transactionId'] ?? '',
+        ]);
+
+        $reference = bin2hex(random_bytes(8));
+
+        $payoneRequest
+            ->setCurrency($currency)
+            ->setAmount($amount)
+            ->setReference($reference);
+
+        $payoneResponse = new PayoneResponse();
+
+        try {
+            $this->payoneSdk->getApiService()->sendRequest($payoneRequest, $payoneResponse);
+        } catch (ClientException $e) {
+            return $this->json([
+                'success' => false,
+                'error' => [
+                    'type'    => 'sdk_client_error',
+                    'message' => $e->getMessage(),
+                ],
+            ], 502);
+        } catch (ErrorResponseExceptionInterface $e) {
+            return $this->json([
+                'success' => false,
+                'error' => [
+                    'type'             => 'payone_api_error',
+                    'message'          => $e->getMessage(),
+                    'customer_message' => $e->getCustomerMessage(),
+                    'code'             => $e->getCode(),
+                ],
+            ], 400);
+        }
 
         return $this->json([
             'success' => true,
-            'got_data' => $request->toArray(),
+            'payone_response' => unserialize($payoneResponse->serialize()),
         ], 201);
     }
 }

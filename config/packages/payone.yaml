@@ -1,0 +1,42 @@
+payone:
+    api:
+        # The PAYONE API endpoint.
+        endpoint: 'https://api.pay1.de/post-gateway/'
+
+        # Use either "test" for testing mode or "live" for production.
+        mode:           test
+        merchant_id:    '%env(PAYONE_MERCHANT_ID)%'
+        portal_id:      '%env(PAYONE_PORTAL_ID)%'
+        sub_account_id: '%env(PAYONE_SUB_ACCOUNT_ID)%'
+        key:            '%env(PAYONE_KEY)%'
+
+        # The hashing method used to hash your API key, either "md5" or "sha384".
+        key_hash_type: sha384
+
+        # The name of your app.
+        integrator_name: ApplePayDemo
+
+        # The version of your app.
+        integrator_version: '0.1.0'
+
+    notification:
+        # A list of trusted notification senders.
+        sender_address_whitelist:
+            # Defaults:
+            - 127.0.0.0/8
+            - 185.60.20.0/24
+            - 213.178.72.196
+            - 213.178.72.197
+            - 217.70.200.0/24
+
+    redirect:
+        # The endpoint of your app that handles redirect payments.
+        url: 'http://localhost'
+
+        # The duration in seconds how long a redirect token is valid.
+        token_lifetime:          1800
+        token_encryption_method: aes-256-ctr
+        token_encryption_key:    '%env(APP_SECRET)%'
+        token_signing_algo:      sha256
+        token_signing_key:       '%env(APP_SECRET)%'
+
