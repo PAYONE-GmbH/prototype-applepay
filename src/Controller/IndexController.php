@@ -80,6 +80,7 @@ class IndexController extends AbstractController
 
         return $this->json([
             'success' => true,
+            'got_data' => $request->toArray(),
         ], 201);
     }
 }
