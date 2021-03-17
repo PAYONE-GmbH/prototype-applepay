@@ -140,7 +140,7 @@ class IndexController extends AbstractController
                 'success' => false,
                 'error' => [
                     'type'             => 'payone_api_error',
-                    'message'          => $e->getMessage(),
+                    //'message'          => $e->getMessage(),
                     'customer_message' => $e->getCustomerMessage(),
                     'code'             => $e->getCode(),
                 ],
