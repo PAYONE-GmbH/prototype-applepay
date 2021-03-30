@@ -105,6 +105,7 @@ class IndexController extends AbstractController
             'lastname'     => 'Demo',
             'firstname'    => 'Dieter',
             'country'      => 'DE',
+            'successurl'   => 'https://apldemo.patsy.one/index',
 
             // Special Apple Pay platform parameters
             'add_paydata[paymentdata_token_version]'             => $tokenData['paymentData']['version'] ?? 'EC_v1',
