@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <style>
         @supports (-webkit-appearance: -apple-pay-button) {
             .apple-pay-button {
@@ -53,13 +54,27 @@
     <div id="app">
         <div class="container">
             <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger" style="margin-top: 2em">
+                        <b>Achtung Livemodus!</b> - dieser Prototyp verwendet aktuell den Livemodus. Deine Karten im Wallet werden also real belastet!
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
                 <div class="col-12 text-center">
                     <button class="apple-pay-button apple-pay-button-black" onclick="payWithApplePay()"></button>
                 </div>
             </div>
             <div class="row">
                 <div class="col-12">
-                    <pre id="debug-dump" style="width: 90%; min-height: 800px; margin: 50px auto; border: 1px solid grey;"></pre>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Output</h5>
+                            <pre class="card-text" id="debug-dump"></pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,7 +98,7 @@
                 currencyCode: 'EUR',
                 supportedNetworks: ['visa', 'masterCard', 'amex', 'discover', 'girocard'],
                 merchantCapabilities: ['supports3DS', 'supportsDebit', 'supportsCredit'],
-                total: { label: 'PAYONE Apple Pay Prototypers', amount: '10.00' },
+                total: { label: 'PAYONE Apple Pay Prototypers', amount: '1.00' },
             })
 
             session.onvalidatemerchant = (evt) => {

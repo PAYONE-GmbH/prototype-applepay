@@ -47,7 +47,7 @@ class IndexController extends AbstractController
             $response = $this->httpClient->request('POST', $paymentSessionEndpoint, [
                 'json' => [
                     'merchantIdentifier' => 'merchant.com.payone.ecom.applepayontheweb',
-                    'displayName' => 'Susis Wollige Wuschelstube',
+                    'displayName' => 'PAYONE Apple Pay Prototyp',
                     'initiative' => 'web',
                     'initiativeContext' => 'apldemo.patsy.one',
                 ],
