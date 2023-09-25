@@ -132,6 +132,9 @@
                         writeDebug('SUCCESS: Created Apple Pay session.', merchantSession)
                         session.completeMerchantValidation(merchantSession)
                     })
+                }).catch(e => {
+                    console.error(`Exception while creating Apple Pay session.`)
+                    writeDebug(`EXCEPTION: ${e.message}: ${JSON.stringify(e)}`)
                 })
             }
 
