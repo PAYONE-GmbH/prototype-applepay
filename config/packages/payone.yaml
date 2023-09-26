@@ -4,7 +4,7 @@ payone:
         endpoint: 'https://api.pay1.de/post-gateway/'
 
         # Use either "test" for testing mode or "live" for production.
-        mode:           live
+        mode:           test
         merchant_id:    '%env(PAYONE_MERCHANT_ID)%'
         portal_id:      '%env(PAYONE_PORTAL_ID)%'
         sub_account_id: '%env(PAYONE_SUB_ACCOUNT_ID)%'
