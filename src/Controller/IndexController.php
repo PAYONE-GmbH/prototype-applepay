@@ -26,7 +26,7 @@ class IndexController extends AbstractController
         private Sdk $payoneSdk,
     ) {
         $this->httpClient = new CurlHttpClient();
-        $this->logger = new Logger();
+        $this->logger = new Logger('apl');
     }
 
     #[Route('/index', name: 'index')]
