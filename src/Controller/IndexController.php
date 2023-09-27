@@ -7,6 +7,7 @@ use Cakasim\Payone\Sdk\Api\Client\ErrorResponseExceptionInterface;
 use Cakasim\Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRequest;
 use Cakasim\Payone\Sdk\Api\Message\Response as PayoneResponse;
 use Cakasim\Payone\Sdk\Sdk;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,9 +15,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class IndexController extends AbstractController
 {
     private CurlHttpClient $httpClient;
+
+    private Logger $logger;
 
     public function __construct(
         private Sdk $payoneSdk,
@@ -63,13 +67,17 @@ class IndexController extends AbstractController
         }
 
         if ($response->getStatusCode() !== 200) {
-            return $this->json([
+            $debugMessage = [
                 'error' => sprintf(
                     'Apple Pay merchant validation / session creation failed, received status %d from Apple Pay service.',
                     $response->getStatusCode(),
                 ),
-                //'apple_service_response' => json_decode($response->getContent(), true),
-            ], 500);
+                'apple_service_response' => json_decode($response->getContent(), true),
+            ];
+
+            $this->logger->debug(print_r($debugMessage, true));
+
+            return $this->json($debugMessage, 500);
         }
 
         $merchantSession = json_decode($response->getContent(), true);
