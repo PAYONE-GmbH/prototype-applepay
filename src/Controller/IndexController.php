@@ -53,10 +53,10 @@ class IndexController extends AbstractController
         try {
             $response = $this->httpClient->request('POST', $paymentSessionEndpoint, [
                 'json' => [
-                    'merchantIdentifier' => 'merchant.com.payone.ecom.applepayontheweb',
+                    'merchantIdentifier' => 'merchant.Payone.ApplePayontheweb',
                     'displayName' => 'PAYONE Apple Pay Prototyp',
                     'initiative' => 'web',
-                    'initiativeContext' => 'apldemo.patsy.one',
+                    'initiativeContext' => 'apldemo.patsy.dev',
                 ],
                 'verify_peer' => false,
                 'local_cert'  => __DIR__ . '/../../cert/merchant_id.pem',
