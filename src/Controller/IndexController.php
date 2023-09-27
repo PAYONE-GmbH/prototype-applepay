@@ -26,6 +26,7 @@ class IndexController extends AbstractController
         private Sdk $payoneSdk,
     ) {
         $this->httpClient = new CurlHttpClient();
+        $this->logger = new Logger();
     }
 
     #[Route('/index', name: 'index')]
@@ -42,7 +43,9 @@ class IndexController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['validation_url'])) {
-            return $this->json(['error' => 'Missing parameter gateway_url in request data.'], 400);
+            $debugMessage = ['error' => 'Missing parameter gateway_url in request data.'];
+            $this->logger->debug(print_r($debugMessage, true));
+            return $this->json($debugMessage, 400);
         }
 
         $paymentSessionEndpoint = "{$data['validation_url']}/paymentservices/paymentSession";
@@ -61,9 +64,11 @@ class IndexController extends AbstractController
                 'passphrase'  => 'Payone1!',
             ]);
         } catch (\Exception $e) {
-            return $this->json([
+            $debugMessage = [
                 'error' => "Error while establishing connection to Apple Pay service: {$e->getMessage()}",
-            ], 500);
+            ];
+            $this->logger->debug(print_r($debugMessage, true));
+            return $this->json($debugMessage, 500);
         }
 
         if ($response->getStatusCode() !== 200) {
