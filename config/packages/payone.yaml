@@ -1,7 +1,7 @@
 payone:
     api:
         # The PAYONE API endpoint.
-        endpoint: 'https://api.pay1.de/post-gateway/'
+        endpoint: '%env(PAYONE_API_ENDPOINT)%'
 
         # Use either "test" for testing mode or "live" for production.
         mode:           test
