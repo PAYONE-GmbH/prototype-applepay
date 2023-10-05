@@ -34,6 +34,7 @@ fi
 # go for commands
 if [[ $INPUT_COMMAND = "$COMMAND_BUILD" ]]
 then
+  php ./bin/composer.phar install --working-dir=./app
   docker-compose -f $COMPOSE_YAML down && docker-compose -f $COMPOSE_YAML build --no-cache
   exit 0
 fi
