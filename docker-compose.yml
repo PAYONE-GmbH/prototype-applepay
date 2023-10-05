@@ -2,6 +2,7 @@ version: "3.7"
 
 services:
   apldemo:
+    container_name: apldemo
     build:
       context: .
       dockerfile: ./Dockerfile
