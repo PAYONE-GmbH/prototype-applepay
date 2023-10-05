@@ -11,10 +11,10 @@ COMMAND_IMPORT_DOMAIN_VERIFICATION="domain-verification"
 # make sure everything is set up first
 
 # .env.local present?
-if [[ ! -f "`pwd`/../app/.env.local" ]]
+if [[ ! -f ./app/.env.local ]]
 then
   echo "Missing file app/.env.local with payone api data. Creating file..."
-  cp ./../app/.env  ./../app/.env.local
+  cp ./app/.env  ./app/.env.local
   echo "File created."
   printf "Please setup payone-merchant-data into file located at: %s/../app/.env.local" "$(pwd)"
   printf "before next run \n"
@@ -22,12 +22,12 @@ then
 fi
 
 # docker-compose.override.yml present?
-COMPOSE_YAML="./../docker-compose.override.yml"
+COMPOSE_YAML="./docker-compose.override.yml"
 if [[ ! -f $COMPOSE_YAML ]]
 then
   echo "Missing file docker-compose.override.yml in project root directory."
   printf "Using default docker-compose.yml \n"
-  COMPOSE_YAML="./../docker-compose.yml"
+  COMPOSE_YAML="./docker-compose.yml"
 fi
 
 # go for commands
