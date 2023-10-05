@@ -11,3 +11,11 @@ services:
       - ./app:/app
     networks:
       - default
+
+  apldemo_php:
+    container_name: apldemo_composer
+    image: php:7.4-cli
+    volumes:
+      - ./app:/app
+    networks:
+      - default
