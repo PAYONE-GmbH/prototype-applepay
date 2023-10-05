@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 INPUT_COMMAND=$1
-
+printf "Using command: %s" "$INPUT_COMMAND"
 COMMAND_RUN="run"
 COMMAND_RESTART="restart"
 COMMAND_STOP="stop"
@@ -31,22 +31,25 @@ then
 fi
 
 # go for commands
-if [[ $INPUT_COMMAND -eq $COMMAND_RUN ]]
+if [[ $INPUT_COMMAND = "$COMMAND_RUN" ]]
 then
   docker-compose -f $COMPOSE_YAML up -d
+  exit 0
 fi
 
-if [[ $INPUT_COMMAND -eq $COMMAND_RESTART ]]
+if [[ $INPUT_COMMAND = "$COMMAND_RESTART" ]]
 then
   docker-compose -f $COMPOSE_YAML restart
+  exit 0
 fi
 
-if [[ $INPUT_COMMAND -eq $COMMAND_STOP ]]
+if [[ $INPUT_COMMAND = "$COMMAND_STOP" ]]
 then
   docker-compose -f $COMPOSE_YAML stop
+  exit 0
 fi
 
-if [[ $INPUT_COMMAND -eq $COMMAND_IMPORT ]]
+if [[ $INPUT_COMMAND = "$COMMAND_IMPORT" ]]
 then
   IMPORT_COMMAND=$2
   if [ -z ${IMPORT_COMMAND+x} ];
@@ -56,17 +59,19 @@ then
     exit 1
   fi;
 
-  if [[ $IMPORT_COMMAND -eq $COMMAND_IMPORT_CERTS ]]
+  if [[ $IMPORT_COMMAND = "$COMMAND_IMPORT_CERTS" ]]
   then
     cp -v ./../import/merchant_id.key ./../app/cert/merchant_id.key
     cp -v ./../import/merchant_id.pem ./../app/cert/merchant_id.pem
   fi
 
-  if [[ $IMPORT_COMMAND -eq $COMMAND_IMPORT_DOMAIN_VERIFICATION ]]
+  if [[ $IMPORT_COMMAND = "$COMMAND_IMPORT_DOMAIN_VERIFICATION" ]]
   then
     mkdir -p ./../app/public/.well-known/
     cp -v ./../import/apple-developer-merchantid-domain-association.txt ./../app/public/.well-known/apple-developer-merchantid-domain-association.txt
   fi
+
+  exit 0
 fi
 
 printf "No matching command found. Please provide '%s', '%s', '%s' or '%s' command as first parameter. \n" "$COMMAND_RUN" "$COMMAND_RESTART" "$COMMAND_STOP" "$COMMAND_IMPORT"
