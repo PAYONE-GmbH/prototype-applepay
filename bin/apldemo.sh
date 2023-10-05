@@ -61,14 +61,14 @@ then
 
   if [[ $IMPORT_COMMAND = "$COMMAND_IMPORT_CERTS" ]]
   then
-    cp -v ./../import/merchant_id.key ./../app/cert/merchant_id.key
-    cp -v ./../import/merchant_id.pem ./../app/cert/merchant_id.pem
+    cp -v ./import/merchant_id.key ./app/cert/merchant_id.key
+    cp -v ./import/merchant_id.pem ./app/cert/merchant_id.pem
   fi
 
   if [[ $IMPORT_COMMAND = "$COMMAND_IMPORT_DOMAIN_VERIFICATION" ]]
   then
-    mkdir -p ./../app/public/.well-known/
-    cp -v ./../import/apple-developer-merchantid-domain-association.txt ./../app/public/.well-known/apple-developer-merchantid-domain-association.txt
+    mkdir -p ./app/public/.well-known/
+    cp -v ./import/apple-developer-merchantid-domain-association.txt ./app/public/.well-known/apple-developer-merchantid-domain-association.txt
   fi
 
   exit 0

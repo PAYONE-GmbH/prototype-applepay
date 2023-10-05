@@ -19,8 +19,9 @@ Consequentially you should own the following files
 
 1. Clone this repository
 2. Place `merchant_id.key`, `merchant_id.pem` and `apple-developer-merchantid-domain-association.txt` into folder `import`
-3. From project root folder run `bash bin/apldemo.sh import`
-4. Configure Payone merchant-data by editing `app/.env.local`. Example: 
+3. From project root folder run `bash bin/apldemo.sh import certs`
+4. From project root folder run `bash bin/apldemo.sh import domain-verification`
+5. Configure Payone merchant-data by editing `app/.env.local`. Example: 
     ```dotenv
     PAYONE_API_ENDPOINT=https://api.pay1.de/post-gateway/
     PAYONE_MODE=test
@@ -29,7 +30,7 @@ Consequentially you should own the following files
     PAYONE_SUB_ACCOUNT_ID=54321
     PAYONE_KEY=secret
     ```  
-5. From project root folder run `bash bin/apldemo.sh run`
+6. From project root folder run `bash bin/apldemo.sh run`
 
 ## Use custom docker-compose.yml
 
