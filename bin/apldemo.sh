@@ -41,7 +41,7 @@ fi
 if [[ $INPUT_COMMAND = "$COMMAND_RUN" ]]
 then
   docker-compose -f $COMPOSE_YAML up -d
-  docker exec apldemo_composer php composer.phar install
+  docker exec apldemo_composer php composer.phar install --working-dir=/app
   exit 0
 fi
 
