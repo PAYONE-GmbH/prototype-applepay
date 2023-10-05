@@ -1,0 +1,69 @@
+# Demo- and testing app for applepay payments
+
+This app enables you to set up an app to place applepay payments in combination with a configured payone apple-pay
+
+## What do I need to run this
+
+First of all you need a host with installed `docker` and `docker-compose` as well as `bash`.
+
+Next you need to have a proper configured Payone merchant account as described in https://docs.payone.com/display/public/PLATFORM/Special+Remarks+-+Apple+Pay#SpecialRemarksApplePay-Prerequisites.
+You 
+
+Consequentially you should own the following files
+
+`merchant_id.key`,
+`merchant_id.pem`,
+`apple-developer-merchantid-domain-association.txt`
+
+## Steps to make this run
+
+1. Clone this repository
+2. Place `merchant_id.key`, `merchant_id.pem` and `apple-developer-merchantid-domain-association.txt` into folder `import`
+3. From project root folder run `bash bin/apldemo.sh import`
+4. Configure Payone merchant-data by editing `app/.env.local`. Example: 
+    ```dotenv
+    PAYONE_API_ENDPOINT=https://api.pay1.de/post-gateway/
+    PAYONE_MODE=test
+    PAYONE_MERCHANT_ID=12345
+    PAYONE_PORTAL_ID=1234567
+    PAYONE_SUB_ACCOUNT_ID=54321
+    PAYONE_KEY=secret
+    ```  
+5. From project root folder run `bash bin/apldemo.sh run`
+
+## Use custom docker-compose.yml
+
+It is recommended to create a file called `docker-compose.override.yml` into the root of project folder with your custom configuration matching your hosts needs.
+
+As an example you can see the contents of the one that is used on azec-host to use app with traefik edge router:
+```yaml
+version: "3.7"
+
+services:
+  apldemo:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: apldemo
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.apldemo.entrypoints=websecure"
+      - "traefik.http.routers.apldemo.rule=Host(`apldemo.patsy.dev`)"
+      - "traefik.http.routers.apldemo.tls=true"
+      - "traefik.http.routers.apldemo.tls.certresolver=cloudflare"
+      - "traefik.http.routers.apldemo.tls.options=default"
+      - "traefik.http.services.apldemo.loadbalancer.server.port=80"
+      - "traefik.http.routers.apldemo.middlewares=appleauth@file, gzip@file, secHeaders@file"
+
+    volumes:
+      - ./app:/app
+    networks:
+      - default
+      - traefik
+
+networks:
+  traefik:
+    external:
+      name: traefik
+
+```
