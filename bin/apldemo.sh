@@ -41,7 +41,7 @@ fi
 if [[ $INPUT_COMMAND = "$COMMAND_RUN" ]]
 then
   docker-compose -f $COMPOSE_YAML up -d
-  docker-compose exec php ./composer.phar install
+  docker-compose exec php composer.phar install
   exit 0
 fi
 
