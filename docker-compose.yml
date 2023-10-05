@@ -14,7 +14,7 @@ services:
 
   apldemo_php:
     container_name: apldemo_php
-    image: php:7.4-cli
+    image: php:7.4-alpine
     volumes:
       - ./app:/app
     networks:
