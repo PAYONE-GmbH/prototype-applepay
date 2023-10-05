@@ -3,6 +3,7 @@
 INPUT_COMMAND=$1
 printf "Using command: %s" "$INPUT_COMMAND"
 COMMAND_RUN="run"
+COMMAND_BUILD="build"
 COMMAND_RESTART="restart"
 COMMAND_STOP="stop"
 COMMAND_IMPORT="import"
@@ -31,6 +32,12 @@ then
 fi
 
 # go for commands
+if [[ $INPUT_COMMAND = "$COMMAND_BUILD" ]]
+then
+  docker-compose -f $COMPOSE_YAML down && docker-compose -f $COMPOSE_YAML build --no-cache
+  exit 0
+fi
+
 if [[ $INPUT_COMMAND = "$COMMAND_RUN" ]]
 then
   docker-compose -f $COMPOSE_YAML up -d

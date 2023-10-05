@@ -30,7 +30,8 @@ Consequentially you should own the following files
     PAYONE_SUB_ACCOUNT_ID=54321
     PAYONE_KEY=secret
     ```  
-6. From project root folder run `bash bin/apldemo.sh run`
+6. From project root folder run `bash bin/apldemo.sh build`
+7. From project root folder run `bash bin/apldemo.sh run`
 
 ## Use custom docker-compose.yml
 
