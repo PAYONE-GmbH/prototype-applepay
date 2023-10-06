@@ -2,11 +2,12 @@ version: "3.7"
 
 services:
   apldemo:
-    container_name: apldemo
+    container_name: apldemo_app
     build:
       context: .
       dockerfile: ./Dockerfile
     image: apldemo
+    restart: unless-stopped
     volumes:
       - ./app:/app
     networks:
@@ -15,6 +16,10 @@ services:
   apldemo_php:
     container_name: apldemo_php
     image: php:7.4-alpine
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: /bin/sh
     volumes:
       - ./app:/app
     networks:
