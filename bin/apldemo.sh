@@ -41,7 +41,7 @@ fi
 if [[ $INPUT_COMMAND = "$COMMAND_RUN" ]]
 then
   docker-compose -f $COMPOSE_YAML up -d
-  docker exec apldemo_php php /app/composer.phar update --working-dir=/app --no-plugins --no-scripts
+  docker exec apldemo_php php /app/composer.phar update --working-dir=/app
   exit 0
 fi
 
