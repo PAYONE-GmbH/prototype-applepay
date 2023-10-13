@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "andrepayone/payone-sdk",
-            "version": "0.3.0",
+            "version": "0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/andrepayone/php-payone-sdk.git",
-                "reference": "60039090a995d232f7beedb84d882c9735fa698a"
+                "reference": "b86677c0ac7b56c911375266329bc3066cdbf675"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/andrepayone/php-payone-sdk/zipball/60039090a995d232f7beedb84d882c9735fa698a",
-                "reference": "60039090a995d232f7beedb84d882c9735fa698a",
+                "url": "https://api.github.com/repos/andrepayone/php-payone-sdk/zipball/b86677c0ac7b56c911375266329bc3066cdbf675",
+                "reference": "b86677c0ac7b56c911375266329bc3066cdbf675",
                 "shasum": ""
             },
             "require": {
@@ -74,7 +74,7 @@
                 "issues": "https://github.com/andrepayone/php-payone-sdk/issues",
                 "source": "https://github.com/andrepayone/php-payone-sdk"
             },
-            "time": "2023-10-12T09:35:44+00:00"
+            "time": "2023-10-12T09:42:43+00:00"
         },
         {
             "name": "andrepayone/payone-sdk-http-message",
@@ -258,16 +258,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/andrepayone/PayoneBundle.git",
-                "reference": "f8aeca2ade33079f08a37f50d879625edae98c30"
+                "reference": "993b71c075468ad9d8c84220e479cfeaefbfe0b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/andrepayone/PayoneBundle/zipball/f8aeca2ade33079f08a37f50d879625edae98c30",
-                "reference": "f8aeca2ade33079f08a37f50d879625edae98c30",
+                "url": "https://api.github.com/repos/andrepayone/PayoneBundle/zipball/993b71c075468ad9d8c84220e479cfeaefbfe0b7",
+                "reference": "993b71c075468ad9d8c84220e479cfeaefbfe0b7",
                 "shasum": ""
             },
             "require": {
-                "andrepayone/payone-sdk": "0.3.0",
+                "andrepayone/payone-sdk": "0.3.1",
                 "symfony/config": "v5.4.26",
                 "symfony/contracts": "^2.0",
                 "symfony/dependency-injection": "v5.4.29",
@@ -310,7 +310,7 @@
                 "issues": "https://github.com/andrepayone/PayoneBundle/issues",
                 "source": "https://github.com/andrepayone/PayoneBundle"
             },
-            "time": "2023-10-12T12:51:55+00:00"
+            "time": "2023-10-13T06:33:23+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
