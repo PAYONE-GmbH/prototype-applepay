@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use Cakasim\Payone\Sdk\Api\Client\ClientExceptionInterface;
-use Cakasim\Payone\Sdk\Api\Client\ErrorResponseExceptionInterface;
-use Cakasim\Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRequest;
-use Cakasim\Payone\Sdk\Api\Message\Response as PayoneResponse;
-use Cakasim\Payone\Sdk\Sdk;
+use Payone\Sdk\Api\Client\ClientExceptionInterface;
+use Payone\Sdk\Api\Client\ErrorResponseExceptionInterface;
+use Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRequest;
+use Payone\Sdk\Api\Message\Response as PayoneResponse;
+use Payone\Sdk\Sdk;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\CurlHttpClient;
