@@ -21,7 +21,7 @@ Consequentially you should own the following files
 2. Place `merchant_id.key`, `merchant_id.pem` and `apple-developer-merchantid-domain-association.txt` into folder `import`
 3. From project root folder run `bash bin/apldemo.sh import certs`
 4. From project root folder run `bash bin/apldemo.sh import domain-verification`
-5. Configure Payone merchant-data by creating a file `app/.env.local` in the root directory of the project folder, filled with data like in this example: 
+5. Configure Payone merchant-data by creating a file `app/.env.local` in the app-directory of the project folder (/app), filled with data like in this example: 
     ```dotenv
     PAYONE_API_ENDPOINT=https://api.pay1.de/post-gateway/
     PAYONE_MODE=test
