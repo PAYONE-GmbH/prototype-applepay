@@ -4,7 +4,7 @@ This app enables you to set up an app to place applepay payments in combination 
 
 ## What do I need to run this
 
-First of all you need a host with installed `docker` and `docker-compose` as well as `bash`.
+First you need a host with installed `docker`, `docker-compose` and a `bash`.
 
 Next you need to have a proper configured Payone merchant account as described in https://docs.payone.com/display/public/PLATFORM/Special+Remarks+-+Apple+Pay#SpecialRemarksApplePay-Prerequisites.
 You 
@@ -17,11 +17,11 @@ Consequentially you should own the following files
 
 ## Steps to make this run
 
-1. Clone this repository
+1. Clone this repository into a dedicated folder on your host-system.
 2. Place `merchant_id.key`, `merchant_id.pem` and `apple-developer-merchantid-domain-association.txt` into folder `import`
 3. From project root folder run `bash bin/apldemo.sh import certs`
 4. From project root folder run `bash bin/apldemo.sh import domain-verification`
-5. Configure Payone merchant-data by editing `app/.env.local`. Example: 
+5. Configure Payone merchant-data by creating a file `app/.env.local` in the root directory of the project folder, filled with data like in this example: 
     ```dotenv
     PAYONE_API_ENDPOINT=https://api.pay1.de/post-gateway/
     PAYONE_MODE=test
@@ -35,37 +35,38 @@ Consequentially you should own the following files
 
 ## Use custom docker-compose.yml
 
-It is recommended to create a file called `docker-compose.override.yml` into the root of project folder with your custom configuration matching your hosts needs.
+It is recommended to create a file called `docker-compose.override.yml` into the root of project folder with a custom configuration matching your hosts needs.
 
-As an example you can see the contents of the one that is used on azec-host to use app with traefik edge router:
+As an example you can see the contents of a configuration extension that is used on azec-host to use app with traefik edge router:
 ```yaml
 version: "3.7"
 
 services:
-  apldemo:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    image: apldemo
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.apldemo.entrypoints=websecure"
-      - "traefik.http.routers.apldemo.rule=Host(`apldemo.patsy.dev`)"
-      - "traefik.http.routers.apldemo.tls=true"
-      - "traefik.http.routers.apldemo.tls.certresolver=cloudflare"
-      - "traefik.http.routers.apldemo.tls.options=default"
-      - "traefik.http.services.apldemo.loadbalancer.server.port=80"
-      - "traefik.http.routers.apldemo.middlewares=appleauth@file, gzip@file, secHeaders@file"
-
-    volumes:
-      - ./app:/app
-    networks:
-      - default
-      - traefik
+   apldemo:
+      container_name: apldemo_app
+      build:
+         context: .
+         dockerfile: ./Dockerfile
+      image: apldemo
+      restart: unless-stopped
+      labels:
+         - "traefik.enable=true"
+         - "traefik.http.routers.apldemo.entrypoints=websecure"
+         - "traefik.http.routers.apldemo.rule=Host(`apldemo.patsy.dev`)"
+         - "traefik.http.routers.apldemo.tls=true"
+         - "traefik.http.routers.apldemo.tls.certresolver=cloudflare"
+         - "traefik.http.routers.apldemo.tls.options=default"
+         - "traefik.http.services.apldemo.loadbalancer.server.port=80"
+         - "traefik.http.routers.apldemo.middlewares=appleauth@file, gzip@file, secHeaders@file"
+      volumes:
+         - ./app:/app
+      networks:
+         - default
+         - traefik
+      depends_on:
+         - apldemo_php
 
 networks:
-  traefik:
-    external:
-      name: traefik
-
+   traefik:
+      external: true
 ```
