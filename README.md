@@ -66,6 +66,18 @@ services:
       depends_on:
          - apldemo_php
 
+   apldemo_php:
+      container_name: apldemo_php
+      image: php:8.1-alpine
+      restart: unless-stopped
+      stdin_open: true
+      tty: true
+      command: /bin/sh
+      volumes:
+         - ./app:/app
+      networks:
+         - default
+
 networks:
    traefik:
       external: true
