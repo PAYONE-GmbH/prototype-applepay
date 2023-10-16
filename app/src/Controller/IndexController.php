@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
-use Cakasim\Payone\Sdk\Api\Client\ClientExceptionInterface;
-use Cakasim\Payone\Sdk\Api\Client\ErrorResponseExceptionInterface;
-use Cakasim\Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRequest;
-use Cakasim\Payone\Sdk\Api\Message\Response as PayoneResponse;
-use Cakasim\Payone\Sdk\Sdk;
+use Payone\Sdk\Api\Client\ClientExceptionInterface;
+use Payone\Sdk\Api\Client\ErrorResponseExceptionInterface;
+use Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRequest;
+use Payone\Sdk\Api\Message\Response as PayoneResponse;
+use Payone\Sdk\Sdk;
+use Symfony\Bridge\Monolog\Logger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,14 +15,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class IndexController extends AbstractController
 {
     private CurlHttpClient $httpClient;
+
+    private Logger $logger;
 
     public function __construct(
         private Sdk $payoneSdk,
     ) {
         $this->httpClient = new CurlHttpClient();
+        $this->logger = new Logger('apl');
     }
 
     #[Route('/index', name: 'index')]
@@ -38,7 +43,9 @@ class IndexController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['validation_url'])) {
-            return $this->json(['error' => 'Missing parameter gateway_url in request data.'], 400);
+            $debugMessage = ['error' => 'Missing parameter gateway_url in request data.'];
+            $this->logger->debug(print_r($debugMessage, true));
+            return $this->json($debugMessage, 400);
         }
 
         $paymentSessionEndpoint = "{$data['validation_url']}/paymentservices/paymentSession";
@@ -46,10 +53,10 @@ class IndexController extends AbstractController
         try {
             $response = $this->httpClient->request('POST', $paymentSessionEndpoint, [
                 'json' => [
-                    'merchantIdentifier' => 'merchant.com.payone.ecom.applepayontheweb',
+                    'merchantIdentifier' => 'merchant.Payone.ApplePayontheweb',
                     'displayName' => 'PAYONE Apple Pay Prototyp',
                     'initiative' => 'web',
-                    'initiativeContext' => 'apldemo.patsy.one',
+                    'initiativeContext' => 'apldemo.patsy.dev',
                 ],
                 'verify_peer' => false,
                 'local_cert'  => __DIR__ . '/../../cert/merchant_id.pem',
@@ -57,19 +64,25 @@ class IndexController extends AbstractController
                 'passphrase'  => 'Payone1!',
             ]);
         } catch (\Exception $e) {
-            return $this->json([
+            $debugMessage = [
                 'error' => "Error while establishing connection to Apple Pay service: {$e->getMessage()}",
-            ], 500);
+            ];
+            $this->logger->debug(print_r($debugMessage, true));
+            return $this->json($debugMessage, 500);
         }
 
         if ($response->getStatusCode() !== 200) {
-            return $this->json([
+            $debugMessage = [
                 'error' => sprintf(
                     'Apple Pay merchant validation / session creation failed, received status %d from Apple Pay service.',
                     $response->getStatusCode(),
                 ),
-                //'apple_service_response' => json_decode($response->getContent(), true),
-            ], 500);
+                'apple_service_response' => json_decode($response->getContent(), true),
+            ];
+
+            $this->logger->debug(print_r($debugMessage, true));
+
+            return $this->json($debugMessage, 500);
         }
 
         $merchantSession = json_decode($response->getContent(), true);

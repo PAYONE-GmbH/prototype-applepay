@@ -1,4 +1,7 @@
 {
+    "andrepayone/payone-symfony-bundle": {
+        "version": "dev-develop"
+    },
     "cakasim/payone-sdk": {
         "version": "0.2.0"
     },
