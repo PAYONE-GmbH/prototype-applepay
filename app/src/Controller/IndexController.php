@@ -104,6 +104,7 @@ class IndexController extends AbstractController
             'visa'       => 'V',
             'mastercard' => 'M',
             'girocard'   => 'G',
+            'amex'       => 'A',
             'default'    => '?',
         ];
 
