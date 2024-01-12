@@ -96,7 +96,7 @@ class IndexController extends AbstractController
         $data = $request->toArray();
 
         $authorizationMethod = $data['authorization_method'] ?? 'preauthorization';
-        $amount = $data['amount'] ?? 100;
+        $amount = (int) $data['amount'] ?? 100;
         $currency = 'EUR';
         $tokenData = $data['token'] ?? [];
 
