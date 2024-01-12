@@ -70,6 +70,13 @@
         <div class="container" style="margin-top: 2em">
             <div class="row">
                 <div class="col-12 text-center">
+                    Amount:<br>
+                    <select id="amount_select">
+                        <option value="variant_1" selected>1,00 EUR</option>
+                        <option value="variant_2">10,00 EUR</option>
+                    </select>
+                </div>
+                <div class="col-12 text-center">
                     <button class="apple-pay-button apple-pay-button-black" onclick="payWithApplePay()"></button>
                 </div>
             </div>
@@ -101,12 +108,24 @@
         }
 
         function payWithApplePay() {
+            const selectAmountVariant = document.getElementById('amount_select');
+            const selectedVariant = selectAmountVariant.value;
+            var amount = '1.00';
+            var amount_payone = 100;
+            if (selectedVariant === 'variant_1') {
+                amount = '1.00';
+                amount_payone = 100;
+            } else if (selectedVariant === 'variant_2') {
+                amount = '10.00';
+                amount_payone = 1000;
+            }
+
             const session = new ApplePaySession(3, {
                 countryCode: 'DE',
                 currencyCode: 'EUR',
                 supportedNetworks: ['visa', 'masterCard', 'amex', 'discover', 'girocard'],
                 merchantCapabilities: ['supports3DS', 'supportsDebit', 'supportsCredit'],
-                total: { label: 'PAYONE Apple Pay Prototypers', amount: '1.00' },
+                total: { label: 'PAYONE Apple Pay Prototypers', amount: amount },
             })
 
             session.onvalidatemerchant = (evt) => {
@@ -145,6 +164,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         token: evt.payment.token,
+                        amount: amount_payone,
                         // todo: make use of shippingDetails, billingDetails
                     }),
                     cache: 'no-cache',
