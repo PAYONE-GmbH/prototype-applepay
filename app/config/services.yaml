@@ -4,6 +4,14 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    payone:
+        api:
+            # The PAYONE API endpoint.
+            endpoint: '%env(PAYONE_API_ENDPOINT)%'
+
+            # Use either "test" for testing mode or "live" for production.
+            mode:           '%env(PAYONE_MODE)%'
+            merchant_id:    '%env(PAYONE_MERCHANT_ID)%'
 
 services:
     # default configuration for services in *this* file
