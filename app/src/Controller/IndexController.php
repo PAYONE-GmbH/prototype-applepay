@@ -39,9 +39,9 @@ class IndexController extends AbstractController
     {
         return $this->render('index/index.html.twig', [
             'controller_name' => 'IndexController',
-            'merchant_id' => $this->container->getEnv('PAYONE_MERCHANT_ID'),
-            'api_endpoint' => $this->container->getEnv('PAYONE_API_ENDPOINT'),
-            'mode' => $this->container->getEnv('PAYONE_MODE'),
+            'merchant_id' => $this->getParameter('payone.api.merchant_id'),
+            'api_endpoint' => $this->getParameter('payone.api.endpoint'),
+            'mode' => $this->getParameter('payone.api.mode'),
         ]);
     }
 
