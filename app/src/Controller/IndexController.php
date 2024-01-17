@@ -8,7 +8,6 @@ use Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRe
 use Payone\Sdk\Api\Message\Response as PayoneResponse;
 use Payone\Sdk\Sdk;
 use Symfony\Bridge\Monolog\Logger;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\CurlHttpClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 
-class IndexController extends AbstractController implements ContainerAwareInterface
+class IndexController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
