@@ -14,10 +14,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 
-class IndexController extends AbstractController
+class IndexController extends AbstractController implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     private CurlHttpClient $httpClient;
 
     private Logger $logger;
@@ -29,11 +33,19 @@ class IndexController extends AbstractController
         $this->logger = new Logger('apl');
     }
 
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
     #[Route('/index', name: 'index')]
     public function index(): Response
     {
         return $this->render('index/index.html.twig', [
             'controller_name' => 'IndexController',
+            'merchant_id' => $this->container->getEnv('PAYONE_MERCHANT_ID'),
+            'api_endpoint' => $this->container->getEnv('PAYONE_API_ENDPOINT'),
+            'mode' => $this->container->getEnv('PAYONE_MODE'),
         ]);
     }
 
