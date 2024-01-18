@@ -29,11 +29,19 @@ class IndexController extends AbstractController
         $this->logger = new Logger('apl');
     }
 
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
     #[Route('/index', name: 'index')]
     public function index(): Response
     {
         return $this->render('index/index.html.twig', [
             'controller_name' => 'IndexController',
+            'merchant_id' => $this->getParameter('payone.api.merchant_id'),
+            'api_endpoint' => $this->getParameter('payone.api.endpoint'),
+            'mode' => $this->getParameter('payone.api.mode'),
         ]);
     }
 
