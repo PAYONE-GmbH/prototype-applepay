@@ -49,7 +49,8 @@ class IndexController extends AbstractController
     public function createApplePaySession(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
+        $debugMessage = ['message' => 'Incoming data for creating apple pay session', 'data' => $data];
+        $this->logger->debug(print_r($debugMessage, true));
         if (!isset($data['validation_url'])) {
             $debugMessage = ['error' => 'Missing parameter gateway_url in request data.'];
             $this->logger->debug(print_r($debugMessage, true));
@@ -57,9 +58,11 @@ class IndexController extends AbstractController
         }
 
         $paymentSessionEndpoint = "{$data['validation_url']}/paymentservices/paymentSession";
+        $debugMessage = ['message' => 'Create payment session endpoint', 'data' => $paymentSessionEndpoint];
+        $this->logger->debug(print_r($debugMessage, true));
 
         try {
-            $response = $this->httpClient->request('POST', $paymentSessionEndpoint, [
+            $paymentRequestContent = [
                 'json' => [
                     'merchantIdentifier' => 'merchant.Payone.ApplePayontheweb',
                     'displayName' => 'PAYONE Apple Pay Prototyp',
@@ -70,7 +73,11 @@ class IndexController extends AbstractController
                 'local_cert'  => __DIR__ . '/../../cert/merchant_id.pem',
                 'local_pk'    => __DIR__ . '/../../cert/merchant_id.key',
                 'passphrase'  => 'Payone1!',
-            ]);
+            ];
+            $debugMessage = ['message' => 'Requesting endpoint with data', 'data' => $paymentRequestContent];
+            $this->logger->debug(print_r($debugMessage, true));
+
+            $response = $this->httpClient->request('POST', $paymentSessionEndpoint, $paymentRequestContent);
         } catch (\Exception $e) {
             $debugMessage = [
                 'error' => "Error while establishing connection to Apple Pay service: {$e->getMessage()}",
@@ -94,6 +101,8 @@ class IndexController extends AbstractController
         }
 
         $merchantSession = json_decode($response->getContent(), true);
+        $debugMessage = ['message' => 'Merchant session created', 'data' => $merchantSession];
+        $this->logger->debug(print_r($debugMessage, true));
 
         return $this->json($merchantSession, 201);
     }
