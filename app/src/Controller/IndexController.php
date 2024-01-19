@@ -70,7 +70,7 @@ class IndexController extends AbstractController
                     'merchantIdentifier' => 'merchant.Payone.ApplePayontheweb',
                     'displayName' => 'PAYONE Apple Pay Prototyp',
                     'initiative' => 'web',
-                    'initiativeContext' => 'apldemo.patsy.dev',
+                    'initiativeContext' => 'apldemo-mass.patsy.dev',
                 ],
                 'verify_peer' => false,
                 'local_cert'  => __DIR__ . '/../../cert/merchant_id.pem',
