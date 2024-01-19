@@ -82,6 +82,7 @@ class IndexController extends AbstractController
             $this->rawLogging(print_r($debugMessage, true));
 
             $response = $this->httpClient->request('POST', $paymentSessionEndpoint, $paymentRequestContent);
+            $this->rawLogging(print_r($response, true));
         } catch (\Exception $e) {
             $debugMessage = [
                 'error' => "Error while establishing connection to Apple Pay service: {$e->getMessage()}",
