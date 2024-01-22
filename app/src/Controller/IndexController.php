@@ -67,15 +67,15 @@ class IndexController extends AbstractController
         try {
             $paymentRequestContent = [
                 'json' => [
-                    'merchantIdentifier' => 'merchant.Payone.ApplePayontheweb',
+                    'merchantIdentifier' => $this->getParameter('payone.apple.merchant_identifier'),
                     'displayName' => 'PAYONE Apple Pay Prototyp',
                     'initiative' => 'web',
-                    'initiativeContext' => 'apldemo-mass.patsy.dev',
+                    'initiativeContext' => $this->getParameter('payone.apple.initiative_context'),
                 ],
                 'verify_peer' => false,
                 'local_cert'  => __DIR__ . '/../../cert/merchant_id.pem',
                 'local_pk'    => __DIR__ . '/../../cert/merchant_id.key',
-                'passphrase'  => 'Payone1!',
+                'passphrase'  => $this->getParameter('payone.apple.passphrase'),
             ];
             $debugMessage = ['message' => 'Requesting endpoint with data', 'data' => $paymentRequestContent];
             $this->logger->debug(print_r($debugMessage, true));
