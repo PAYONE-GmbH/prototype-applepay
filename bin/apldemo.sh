@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 INPUT_COMMAND=$1
-printf "\nUsing command: %s" "$INPUT_COMMAND"
+printf "Using command: %s\n" "$INPUT_COMMAND"
 COMMAND_RUN="run"
 COMMAND_BUILD="build"
 COMMAND_RESTART="restart"
