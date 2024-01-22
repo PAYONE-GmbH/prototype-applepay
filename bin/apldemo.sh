@@ -17,12 +17,23 @@ then
   echo "Missing file app/.env.local with payone api data. Creating file..."
   cp ./app/.env  ./app/.env.local
   echo "File created."
-  printf "Please setup payone-merchant-data into file located at: %s/../app/.env.local" "$(pwd)"
+  printf "Please setup payone-merchant-data and apple data into file located at: %s/../app/.env.local" "$(pwd)"
   printf "before next run \n"
   exit 1
 fi
 
-source ./app/.env.local
+# .env present?
+if [[ ! -f .env ]]
+then
+  echo "Missing file .env with app data. Creating file..."
+  cp .env.example  .env
+  echo "File created."
+  printf "Please setup app data into file located at: %s/../.env" "$(pwd)"
+  printf "before next run \n"
+  exit 1
+fi
+
+source .env
 
 # docker-compose.override.yml present?
 COMPOSE_YAML="./docker-compose.override.yml"
