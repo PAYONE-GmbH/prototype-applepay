@@ -22,6 +22,8 @@ then
   exit 1
 fi
 
+source ./app/.env.local
+
 # docker-compose.override.yml present?
 COMPOSE_YAML="./docker-compose.override.yml"
 if [[ ! -f $COMPOSE_YAML ]]
@@ -41,7 +43,7 @@ fi
 if [[ $INPUT_COMMAND = "$COMMAND_RUN" ]]
 then
   docker-compose -f $COMPOSE_YAML up -d
-  docker exec apldemo_php php /app/composer.phar install --working-dir=/app
+  docker exec apldemo_php_$($CONTAINER_NAME_SUFFIX) php /app/composer.phar install --working-dir=/app
   exit 0
 fi
 
