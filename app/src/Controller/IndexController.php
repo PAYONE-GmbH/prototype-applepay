@@ -42,6 +42,8 @@ class IndexController extends AbstractController
             'merchant_id' => $this->getParameter('payone.api.merchant_id'),
             'api_endpoint' => $this->getParameter('payone.api.endpoint'),
             'mode' => $this->getParameter('payone.api.mode'),
+            'merchant_identifier' => $this->getParameter('payone.apple.merchant_identifier'),
+            'initiative_context' => $this->getParameter('payone.apple.initiative_context'),
         ]);
     }
 
@@ -49,33 +51,46 @@ class IndexController extends AbstractController
     public function createApplePaySession(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-
+        $debugMessage = ['message' => 'Incoming data for creating apple pay session', 'data' => $data];
+        $this->logger->debug(print_r($debugMessage, true));
+        $this->rawLogging(print_r($debugMessage, true));
         if (!isset($data['validation_url'])) {
             $debugMessage = ['error' => 'Missing parameter gateway_url in request data.'];
             $this->logger->debug(print_r($debugMessage, true));
+            $this->rawLogging(print_r($debugMessage, true));
             return $this->json($debugMessage, 400);
         }
 
         $paymentSessionEndpoint = "{$data['validation_url']}/paymentservices/paymentSession";
+        $debugMessage = ['message' => 'Create payment session endpoint', 'data' => $paymentSessionEndpoint];
+        $this->rawLogging(print_r($debugMessage, true));
+        $this->logger->debug(print_r($debugMessage, true));
 
         try {
-            $response = $this->httpClient->request('POST', $paymentSessionEndpoint, [
+            $paymentRequestContent = [
                 'json' => [
-                    'merchantIdentifier' => 'merchant.Payone.ApplePayontheweb',
+                    'merchantIdentifier' => $this->getParameter('payone.apple.merchant_identifier'),
                     'displayName' => 'PAYONE Apple Pay Prototyp',
                     'initiative' => 'web',
-                    'initiativeContext' => 'apldemo.patsy.dev',
+                    'initiativeContext' => $this->getParameter('payone.apple.initiative_context'),
                 ],
                 'verify_peer' => false,
                 'local_cert'  => __DIR__ . '/../../cert/merchant_id.pem',
                 'local_pk'    => __DIR__ . '/../../cert/merchant_id.key',
-                'passphrase'  => 'Payone1!',
-            ]);
+                'passphrase'  => $this->getParameter('payone.apple.passphrase'),
+            ];
+            $debugMessage = ['message' => 'Requesting endpoint with data', 'data' => $paymentRequestContent];
+            $this->logger->debug(print_r($debugMessage, true));
+            $this->rawLogging(print_r($debugMessage, true));
+
+            $response = $this->httpClient->request('POST', $paymentSessionEndpoint, $paymentRequestContent);
+            $this->rawLogging(print_r($response, true));
         } catch (\Exception $e) {
             $debugMessage = [
                 'error' => "Error while establishing connection to Apple Pay service: {$e->getMessage()}",
             ];
             $this->logger->debug(print_r($debugMessage, true));
+            $this->rawLogging(print_r($debugMessage, true));
             return $this->json($debugMessage, 500);
         }
 
@@ -89,11 +104,14 @@ class IndexController extends AbstractController
             ];
 
             $this->logger->debug(print_r($debugMessage, true));
-
+            $this->rawLogging(print_r($debugMessage, true));
             return $this->json($debugMessage, 500);
         }
 
         $merchantSession = json_decode($response->getContent(), true);
+        $debugMessage = ['message' => 'Merchant session created', 'data' => $merchantSession];
+        $this->logger->debug(print_r($debugMessage, true));
+        $this->rawLogging(print_r($debugMessage, true));
 
         return $this->json($merchantSession, 201);
     }
@@ -172,5 +190,12 @@ class IndexController extends AbstractController
             'success' => true,
             'payone_response' => unserialize($payoneResponse->serialize()),
         ], 201);
+    }
+
+    protected function rawLogging($message) {
+        $file = fopen('/app/var/log/apple.log', 'a');
+        $prefix = "[".date('Ymd-His')."] ";
+        fwrite($file, $prefix.$message."\n");
+        fclose($file);
     }
 }

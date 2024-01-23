@@ -56,12 +56,18 @@
             <div class="row">
                 <div class="col-12">
                     <div class="info alert-info" style="margin-top: 2em">
-                        <p>Aktuelle Konfiguration:
+                        <p>Aktuelle Payone Konfiguration:
                             <ul>
-                            <li>mid: {{ merchant_id }}</li>
-                            <li>mode: {{ mode }}</li>
-                            <li>endpoint: {{ api_endpoint }}</li>
-                            <li>request: preauthorization</li>
+                                <li>mid: {{ merchant_id }}</li>
+                                <li>mode: {{ mode }}</li>
+                                <li>endpoint: {{ api_endpoint }}</li>
+                                <li>request: preauthorization</li>
+                            </ul>
+                        </p>
+                        <p>Aktuelle Apple Konfiguration:
+                            <ul>
+                                <li>merchant_identifier: {{ merchant_identifier }}</li>
+                                <li>initiative_context: {{ initiative_context }}</li>
                             </ul>
                         </p>
                     </div>
