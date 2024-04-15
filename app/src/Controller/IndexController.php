@@ -5,6 +5,7 @@ namespace App\Controller;
 use Payone\Sdk\Api\Client\ClientExceptionInterface;
 use Payone\Sdk\Api\Client\ErrorResponseExceptionInterface;
 use Payone\Sdk\Api\Message\Payment\AuthorizationRequest as PayoneAuthorizationRequest;
+use Payone\Sdk\Api\Message\Payment\G;
 use Payone\Sdk\Api\Message\Response as PayoneResponse;
 use Payone\Sdk\Sdk;
 use Symfony\Bridge\Monolog\Logger;
@@ -54,66 +55,20 @@ class IndexController extends AbstractController
         $debugMessage = ['message' => 'Incoming data for creating apple pay session', 'data' => $data];
         $this->logger->debug(print_r($debugMessage, true));
         $this->rawLogging(print_r($debugMessage, true));
-        if (!isset($data['validation_url'])) {
-            $debugMessage = ['error' => 'Missing parameter gateway_url in request data.'];
-            $this->logger->debug(print_r($debugMessage, true));
-            $this->rawLogging(print_r($debugMessage, true));
-            return $this->json($debugMessage, 400);
+
+        $checkoutVariant =
+            (
+                isset($data['checkout_variant']) &&
+                in_array($data['checkout_variant'],['legacy', 'mass'])
+            ) ? $data['checkout_variant'] : 'legacy';
+
+        if ($checkoutVariant === 'legacy') {
+            return $this->createLegacyAppleSession($request);
+        } else if ($checkoutVariant === 'mass') {
+            return $this->createMassAppleSession($request);
         }
 
-        $paymentSessionEndpoint = "{$data['validation_url']}/paymentservices/paymentSession";
-        $debugMessage = ['message' => 'Create payment session endpoint', 'data' => $paymentSessionEndpoint];
-        $this->rawLogging(print_r($debugMessage, true));
-        $this->logger->debug(print_r($debugMessage, true));
-
-        try {
-            $paymentRequestContent = [
-                'json' => [
-                    'merchantIdentifier' => $this->getParameter('payone.apple.merchant_identifier'),
-                    'displayName' => 'PAYONE Apple Pay Prototyp',
-                    'initiative' => 'web',
-                    'initiativeContext' => $this->getParameter('payone.apple.initiative_context'),
-                ],
-                'verify_peer' => false,
-                'local_cert'  => __DIR__ . '/../../cert/merchant_id.pem',
-                'local_pk'    => __DIR__ . '/../../cert/merchant_id.key',
-                'passphrase'  => $this->getParameter('payone.apple.passphrase'),
-            ];
-            $debugMessage = ['message' => 'Requesting endpoint with data', 'data' => $paymentRequestContent];
-            $this->logger->debug(print_r($debugMessage, true));
-            $this->rawLogging(print_r($debugMessage, true));
-
-            $response = $this->httpClient->request('POST', $paymentSessionEndpoint, $paymentRequestContent);
-            $this->rawLogging(print_r($response, true));
-        } catch (\Exception $e) {
-            $debugMessage = [
-                'error' => "Error while establishing connection to Apple Pay service: {$e->getMessage()}",
-            ];
-            $this->logger->debug(print_r($debugMessage, true));
-            $this->rawLogging(print_r($debugMessage, true));
-            return $this->json($debugMessage, 500);
-        }
-
-        if ($response->getStatusCode() !== 200) {
-            $debugMessage = [
-                'error' => sprintf(
-                    'Apple Pay merchant validation / session creation failed, received status %d from Apple Pay service.',
-                    $response->getStatusCode(),
-                ),
-                'apple_service_response' => json_decode($response->getContent(), true),
-            ];
-
-            $this->logger->debug(print_r($debugMessage, true));
-            $this->rawLogging(print_r($debugMessage, true));
-            return $this->json($debugMessage, 500);
-        }
-
-        $merchantSession = json_decode($response->getContent(), true);
-        $debugMessage = ['message' => 'Merchant session created', 'data' => $merchantSession];
-        $this->logger->debug(print_r($debugMessage, true));
-        $this->rawLogging(print_r($debugMessage, true));
-
-        return $this->json($merchantSession, 201);
+        // throw exeption
     }
 
     #[Route('/api/apple-pay/payment', name: 'create_apple_pay_payment', methods: ['POST'])]
@@ -198,4 +153,130 @@ class IndexController extends AbstractController
         fwrite($file, $prefix.$message."\n");
         fclose($file);
     }
+
+    protected function createLegacyAppleSession(Request $request) {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['validation_url'])) {
+            $debugMessage = ['error' => 'Missing parameter gateway_url in request data.'];
+            $this->logger->debug(print_r($debugMessage, true));
+            $this->rawLogging(print_r($debugMessage, true));
+            return $this->json($debugMessage, 400);
+        }
+
+        $paymentSessionEndpoint = "{$data['validation_url']}/paymentservices/paymentSession";
+        $debugMessage = ['message' => 'Create payment session endpoint', 'data' => $paymentSessionEndpoint];
+        $this->rawLogging(print_r($debugMessage, true));
+        $this->logger->debug(print_r($debugMessage, true));
+
+        try {
+            $paymentRequestContent = [
+                'json' => [
+                    'merchantIdentifier' => $this->getParameter('payone.apple.merchant_identifier'),
+                    'displayName' => 'PAYONE Apple Pay Prototyp',
+                    'initiative' => 'web',
+                    'initiativeContext' => $this->getParameter('payone.apple.initiative_context'),
+                ],
+                'verify_peer' => false,
+                'local_cert'  => __DIR__ . '/../../cert/merchant_id.pem',
+                'local_pk'    => __DIR__ . '/../../cert/merchant_id.key',
+                'passphrase'  => $this->getParameter('payone.apple.passphrase'),
+            ];
+            $debugMessage = ['message' => 'Requesting endpoint with data', 'data' => $paymentRequestContent];
+            $this->logger->debug(print_r($debugMessage, true));
+            $this->rawLogging(print_r($debugMessage, true));
+
+            $response = $this->httpClient->request('POST', $paymentSessionEndpoint, $paymentRequestContent);
+            $this->rawLogging(print_r($response, true));
+        } catch (\Exception $e) {
+            $debugMessage = [
+                'error' => "Error while establishing connection to Apple Pay service: {$e->getMessage()}",
+            ];
+            $this->logger->debug(print_r($debugMessage, true));
+            $this->rawLogging(print_r($debugMessage, true));
+            return $this->json($debugMessage, 500);
+        }
+
+        if ($response->getStatusCode() !== 200) {
+            $debugMessage = [
+                'error' => sprintf(
+                    'Apple Pay merchant validation / session creation failed, received status %d from Apple Pay service.',
+                    $response->getStatusCode(),
+                ),
+                'apple_service_response' => json_decode($response->getContent(), true),
+            ];
+
+            $this->logger->debug(print_r($debugMessage, true));
+            $this->rawLogging(print_r($debugMessage, true));
+            return $this->json($debugMessage, 500);
+        }
+
+        $merchantSession = json_decode($response->getContent(), true);
+        $debugMessage = ['message' => 'Merchant session created', 'data' => $merchantSession];
+        $this->logger->debug(print_r($debugMessage, true));
+        $this->rawLogging(print_r($debugMessage, true));
+
+        return $this->json($merchantSession, 201);
+
+    }
+
+    protected function createMassAppleSession(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        $apiKey = md5($this->getParameter('payone.api.key'));
+
+        $genericRequestData = [];
+        $genericRequestData['request'] = 'genericpayment';
+        $genericRequestData['mid'] = $this->getParameter('payone.api.merchant_id');
+        $genericRequestData['portal_id'] = $this->getParameter('payone.api.portal_id');
+        $genericRequestData['key'] = $apiKey;
+        $genericRequestData['aid'] = $this->getParameter('payone.api.sub_account_id');
+        $genericRequestData['currency'] = 'EUR';
+        $genericRequestData['clearingtype'] = 'wlt';
+        $genericRequestData['reference'] = bin2hex(random_bytes(8));
+        $genericRequestData['lastname'] = "Apologist";
+        $genericRequestData['country'] = "de";
+        $genericRequestData['wallettype'] = "APL";
+        $genericRequestData['add_paydata[action]'] = "init_applepay_session";
+        $genericRequestData['add_paydata[display_name]'] = "Payone Applepay Prototype";
+        $genericRequestData['add_paydata[domain_name]'] = $this->getParameter('payone.apple.initiative_context');
+
+        $aResponse = $this->getCurlPhpResponse($genericRequestData);
+
+    }
+
+    /**
+     * Using native php curl to perform request
+     *
+     * @param  array $aUrlArray
+     * @return array $aResponse
+     */
+    protected function getCurlPhpResponse($aRequestParameters)
+    {
+        $oConfig = $this->getConfig();
+        $sAuthHeader = $oConfig->getConfigParam('pcpAuthorizationHeader');
+        $sJsonRequest = json_encode($aRequestParameters);
+        $sUrl = $this->getParameter('payone.api.endpoint');
+        $this->rawLogging('Send request to '.$sUrl, $sJsonRequest);
+
+        $oCurl = curl_init($sUrl);
+        curl_setopt($oCurl, CURLOPT_POST, 1);
+        curl_setopt($oCurl, CURLOPT_POSTFIELDS, $sJsonRequest);
+        curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, false);  // no ssl check => demo
+        curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);  // no hostname check => demo
+        curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($oCurl, CURLOPT_TIMEOUT, 45);
+
+        $result = curl_exec($oCurl);
+        if (curl_error($oCurl)) {
+            $aResponse = "connection-type: 1 - errormessage=" . curl_errno($oCurl) . ": " . curl_error($oCurl);
+        } else {
+            $aResponse = json_decode($result, true);
+        }
+
+        curl_close($oCurl);
+
+        return $aResponse;
+    }
+
 }

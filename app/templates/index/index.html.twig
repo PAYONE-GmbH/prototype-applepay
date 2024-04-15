@@ -77,6 +77,13 @@
         <div class="container" style="margin-top: 2em">
             <div class="row">
                 <div class="col-12 text-center">
+                    Checkout Variant:<br>
+                    <select id="checkout_variant">
+                        <option value="legacy" selected>Legacy</option>
+                        <option value="mass">Mass-Enablement</option>
+                    </select>
+                </div>
+                <div class="col-12 text-center">
                     Amount:<br>
                     <select id="amount_select">
                         <option value="variant_1" selected>1,00 EUR</option>
@@ -126,6 +133,7 @@
                 amount = '10.00';
                 amount_payone = 1000;
             }
+            const selectedCheckoutVariant = document.getElementById('checkout_variant');
 
             const session = new ApplePaySession(3, {
                 countryCode: 'DE',
@@ -139,7 +147,10 @@
                 fetch('{{ path('create_apple_pay_session') }}', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ validation_url: 'https://apple-pay-gateway.apple.com' }),
+                    body: JSON.stringify({
+                        validation_url: 'https://apple-pay-gateway.apple.com',
+                        checkout_variant: selectedCheckoutVariant
+                    }),
                     cache: 'no-cache',
                 }).then(response => {
                     if (response.status !== 201) {
