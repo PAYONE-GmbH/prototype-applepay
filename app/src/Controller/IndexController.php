@@ -225,21 +225,22 @@ class IndexController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $apiKey = md5($this->getParameter('payone.api.key'));
 
-        $genericRequestData = [];
-        $genericRequestData['request'] = 'genericpayment';
-        $genericRequestData['mid'] = $this->getParameter('payone.api.merchant_id');
-        $genericRequestData['portal_id'] = $this->getParameter('payone.api.portal_id');
-        $genericRequestData['key'] = $apiKey;
-        $genericRequestData['aid'] = $this->getParameter('payone.api.sub_account_id');
-        $genericRequestData['currency'] = 'EUR';
-        $genericRequestData['clearingtype'] = 'wlt';
-        $genericRequestData['reference'] = bin2hex(random_bytes(8));
-        $genericRequestData['lastname'] = "Apologist";
-        $genericRequestData['country'] = "de";
-        $genericRequestData['wallettype'] = "APL";
-        $genericRequestData['add_paydata[action]'] = "init_applepay_session";
-        $genericRequestData['add_paydata[display_name]'] = "Payone Applepay Prototype";
-        $genericRequestData['add_paydata[domain_name]'] = $this->getParameter('payone.apple.initiative_context');
+        $genericRequestData = [
+            'request'                   => 'genericpayment',
+            'mid'                       => $this->getParameter('payone.api.merchant_id'),
+            'portal_id'                 => $this->getParameter('payone.api.portal_id'),
+            'key'                       => $apiKey,
+            'aid'                       => $this->getParameter('payone.api.sub_account_id'),
+            'currency'                  => 'EUR',
+            'clearingtype'              => 'wlt',
+            'reference'                 => bin2hex(random_bytes(8)),
+            'lastname'                  => 'Apologist',
+            'country'                   => 'de',
+            'wallettype'                => 'APL',
+            'add_paydata[action]'       => 'init_applepay_session',
+            'add_paydata[display_name]' => 'Payone Applepay Prototype',
+            'add_paydata[domain_name]'  => $this->getParameter('payone.apple.initiative_context'),
+        ];
 
         $this->rawLogging("Generic request data: ".print_r($genericRequestData, true));
         $response = $this->getCurlPhpResponse($genericRequestData);
