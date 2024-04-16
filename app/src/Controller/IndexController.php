@@ -242,14 +242,15 @@ class IndexController extends AbstractController
         $genericRequestData['add_paydata[domain_name]'] = $this->getParameter('payone.apple.initiative_context');
 
         $response = $this->getCurlPhpResponse($genericRequestData);
+        $this->rawLogging("Answer: ".print_r($response, true));
         if (is_array($response)) {
             $merchantSession = $this->createMerchantSession($response);
             $this->json($merchantSession, 201);
         }
         $this->logger->debug($response);
         $this->rawLogging($response);
-        return $this->json("Error building merchant session from init_applepay_session.", 500);
 
+        return $this->json("Error building merchant session from init_applepay_session.", 500);
     }
 
     /**
