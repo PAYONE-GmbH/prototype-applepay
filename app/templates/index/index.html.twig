@@ -133,7 +133,7 @@
                 amount = '10.00';
                 amount_payone = 1000;
             }
-            const selectedCheckoutVariant = document.getElementById('checkout_variant');
+            const selectedCheckoutVariant = document.getElementById('checkout_variant').value;
 
             const session = new ApplePaySession(3, {
                 countryCode: 'DE',
