@@ -245,7 +245,7 @@ class IndexController extends AbstractController
         $this->rawLogging("Answer: ".print_r($response, true));
         if (is_array($response)) {
             $merchantSession = $this->createMerchantSession($response);
-            $this->json($merchantSession, 201);
+            return $this->json($merchantSession, 201);
         }
         $this->logger->debug($response);
         $this->rawLogging($response);
