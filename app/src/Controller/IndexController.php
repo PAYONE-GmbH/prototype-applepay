@@ -68,7 +68,7 @@ class IndexController extends AbstractController
             return $this->createMassAppleSession($request);
         }
 
-        // throw exeption
+        return $this->json("Error: No checkout variant selected", 500);
     }
 
     #[Route('/api/apple-pay/payment', name: 'create_apple_pay_payment', methods: ['POST'])]
@@ -241,7 +241,14 @@ class IndexController extends AbstractController
         $genericRequestData['add_paydata[display_name]'] = "Payone Applepay Prototype";
         $genericRequestData['add_paydata[domain_name]'] = $this->getParameter('payone.apple.initiative_context');
 
-        $aResponse = $this->getCurlPhpResponse($genericRequestData);
+        $response = $this->getCurlPhpResponse($genericRequestData);
+        if (is_array($response)) {
+            $merchantSession = $this->createMerchantSession($response);
+            $this->json($merchantSession, 201);
+        }
+        $this->logger->debug($response);
+        $this->rawLogging($response);
+        return $this->json("Error building merchant session from init_applepay_session.", 500);
 
     }
 
@@ -251,32 +258,41 @@ class IndexController extends AbstractController
      * @param  array $aUrlArray
      * @return array $aResponse
      */
-    protected function getCurlPhpResponse($aRequestParameters)
+    protected function getCurlPhpResponse($requestParameters)
     {
-        $oConfig = $this->getConfig();
-        $sAuthHeader = $oConfig->getConfigParam('pcpAuthorizationHeader');
-        $sJsonRequest = json_encode($aRequestParameters);
-        $sUrl = $this->getParameter('payone.api.endpoint');
-        $this->rawLogging('Send request to '.$sUrl, $sJsonRequest);
+        $jsonRequest = json_encode($requestParameters);
+        $url = $this->getParameter('payone.api.endpoint');
+        $this->rawLogging('Send request to '.$url);
 
-        $oCurl = curl_init($sUrl);
-        curl_setopt($oCurl, CURLOPT_POST, 1);
-        curl_setopt($oCurl, CURLOPT_POSTFIELDS, $sJsonRequest);
-        curl_setopt($oCurl, CURLOPT_SSL_VERIFYPEER, false);  // no ssl check => demo
-        curl_setopt($oCurl, CURLOPT_SSL_VERIFYHOST, 0);  // no hostname check => demo
-        curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($oCurl, CURLOPT_TIMEOUT, 45);
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonRequest);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);  // no ssl check => demo
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);  // no hostname check => demo
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 45);
 
-        $result = curl_exec($oCurl);
-        if (curl_error($oCurl)) {
-            $aResponse = "connection-type: 1 - errormessage=" . curl_errno($oCurl) . ": " . curl_error($oCurl);
+        $result = curl_exec($curl);
+        if (curl_error($curl)) {
+            $response = "connection-type: 1 - errormessage=" . curl_errno($curl) . ": " . curl_error($curl);
         } else {
-            $aResponse = json_decode($result, true);
+            $response = json_decode($result, true);
         }
 
-        curl_close($oCurl);
+        curl_close($curl);
 
-        return $aResponse;
+        return $response;
+    }
+
+    /**
+     * Creates merchant session from payone response
+     *
+     * @param array $response
+     * @return array
+     */
+    private function createMerchantSession(array $response): array
+    {
+        return [];
     }
 
 }
