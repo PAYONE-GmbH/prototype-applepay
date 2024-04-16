@@ -261,7 +261,11 @@ class IndexController extends AbstractController
      */
     protected function getCurlPhpResponse($requestParameters)
     {
+        $this->rawLogging("Use parameters:\n ".print_r($requestParameters));
         $jsonRequest = json_encode($requestParameters);
+        if ($jsonRequest === false) {
+            $this->rawLogging("Failed encoding parameters!");
+        };
         $url = $this->getParameter('payone.api.endpoint');
         $this->rawLogging('Send request to '.$url." with parameters:\n ".print_r($jsonRequest));
 
