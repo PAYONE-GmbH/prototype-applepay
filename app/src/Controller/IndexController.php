@@ -262,17 +262,26 @@ class IndexController extends AbstractController
      */
     protected function getCurlPhpResponse(array $requestParameters): array|string
     {
-        $this->rawLogging("Use parameters:\n ".print_r($requestParameters, true));
-        $jsonRequest = json_encode($requestParameters);
-        if ($jsonRequest === false) {
-            $this->rawLogging("Failed encoding parameters!");
-        };
         $url = $this->getParameter('payone.api.endpoint');
-        $this->rawLogging('Send request to '.$url." with parameters:\n".$jsonRequest);
 
-        $curl = curl_init($url);
+        $requestUrl = '';
+        foreach ($requestParameters as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $i => $val1) {
+                    $requestUrl .= "&" . $key . "[" . $i . "]=" . urlencode($val1);
+                }
+            } else {
+                $requestUrl .= "&" . $key . "=" . urlencode($value);
+            }
+        }
+        $requestUrl = $url . "?" . substr($requestUrl, 1);
+        $parsedUrl = parse_url($requestUrl);
+        $curlUrl = $parsedUrl['scheme'] . "://" . $parsedUrl['host'] . $parsedUrl['path'];
+        $this->rawLogging('Send request to '.$curlUrl." with parameters:\n".$parsedUrl['query']);
+
+        $curl = curl_init($curlUrl);
         curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $jsonRequest);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $parsedUrl['query']);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);  // no ssl check => demo
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);  // no hostname check => demo
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
