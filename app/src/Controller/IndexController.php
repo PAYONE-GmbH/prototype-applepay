@@ -256,8 +256,7 @@ class IndexController extends AbstractController
     /**
      * Using native php curl to perform request
      *
-     * @param  array $aUrlArray
-     * @return array $aResponse
+     * @return array $response
      */
     protected function getCurlPhpResponse($requestParameters)
     {
@@ -304,7 +303,7 @@ class IndexController extends AbstractController
             'signature'                         => $response['add_paydata[signature]'],
             'operationalAnalyticsIdentifier'    => $response['add_paydata[operationalAnalyticsIdentifier]'],
             'retries'                           => $response['add_paydata[retries]'],
-        'pspId'                                 => $response['add_paydata[pspId]'],
+            'pspId'                             => $response['add_paydata[pspId]'],
         ];
     }
 
