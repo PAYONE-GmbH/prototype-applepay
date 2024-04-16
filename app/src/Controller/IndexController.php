@@ -262,7 +262,7 @@ class IndexController extends AbstractController
     {
         $jsonRequest = json_encode($requestParameters);
         $url = $this->getParameter('payone.api.endpoint');
-        $this->rawLogging('Send request to '.$url);
+        $this->rawLogging('Send request to '.$url." with parameters:\n ".print_r($jsonRequest));
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_POST, 1);
