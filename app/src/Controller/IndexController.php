@@ -241,6 +241,7 @@ class IndexController extends AbstractController
         $genericRequestData['add_paydata[display_name]'] = "Payone Applepay Prototype";
         $genericRequestData['add_paydata[domain_name]'] = $this->getParameter('payone.apple.initiative_context');
 
+        $this->rawLogging("Generic request data: ".print_r($genericRequestData, true));
         $response = $this->getCurlPhpResponse($genericRequestData);
         $this->rawLogging("Answer: ".print_r($response, true));
         if (is_array($response)) {
