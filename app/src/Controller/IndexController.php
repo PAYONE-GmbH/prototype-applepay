@@ -222,7 +222,6 @@ class IndexController extends AbstractController
 
     protected function createMassAppleSession(Request $request)
     {
-        $data = json_decode($request->getContent(), true);
         $apiKey = md5($this->getParameter('payone.api.key'));
 
         $genericRequestData = [
