@@ -286,14 +286,26 @@ class IndexController extends AbstractController
     }
 
     /**
-     * Creates merchant session from payone response
+     * Creates merchant session array from payone response
      *
      * @param array $response
      * @return array
      */
     private function createMerchantSession(array $response): array
     {
-        return [];
+        return [
+            'epochTimestamp'                    => $response['add_paydata[epochTimestamp]'],
+            'expiresAt'                         => $response['add_paydata[expiresAt]'],
+            'merchantSessionIdentifier'         => $response['add_paydata[merchantSessionIdentifier]'],
+            'nonce'                             => $response['add_paydata[nonce]'],
+            'merchantIdentifier'                => $response['add_paydata[merchantIdentifier]'],
+            'domainName'                        => $this->getParameter('payone.apple.initiative_context'),
+            'displayName'                       => 'PAYONE Apple Pay Prototyp',
+            'signature'                         => $response['add_paydata[signature]'],
+            'operationalAnalyticsIdentifier'    => $response['add_paydata[operationalAnalyticsIdentifier]'],
+            'retries'                           => $response['add_paydata[retries]'],
+        'pspId'                                 => $response['add_paydata[pspId]'],
+        ];
     }
 
 }
