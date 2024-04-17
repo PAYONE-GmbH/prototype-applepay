@@ -329,11 +329,11 @@ class IndexController extends AbstractController
             'merchantSessionIdentifier'         => $response['add_paydata[merchantSessionIdentifier]'],
             'nonce'                             => $response['add_paydata[nonce]'],
             'merchantIdentifier'                => $response['add_paydata[merchantIdentifier]'],
-            'domainName'                        => $this->getParameter('payone.apple.initiative_context'),
+            'domainName'                        => $response['add_paydata[domainName]'],
             'displayName'                       => 'PAYONE Apple Pay Prototyp',
             'signature'                         => $response['add_paydata[signature]'],
             'operationalAnalyticsIdentifier'    => $response['add_paydata[operationalAnalyticsIdentifier]'],
-            'retries'                           => $response['add_paydata[retries]'],
+            'retries'                           => (int)$response['add_paydata[retries]'],
             'pspId'                             => $response['add_paydata[pspId]'],
         ];
     }
