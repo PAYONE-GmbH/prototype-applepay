@@ -246,6 +246,7 @@ class IndexController extends AbstractController
         $response = $this->getCurlPhpResponse($genericRequestData);
         $this->rawLogging("Answer: ".print_r($response, true));
         if (is_array($response)) {
+            $this->rawLogging("Calling createMerchantSession");
             $merchantSession = $this->createMerchantSession($response);
             $debugMessage = ['message' => 'Merchant session created', 'data' => $merchantSession];
             $this->logger->debug(print_r($debugMessage, true));
@@ -302,10 +303,15 @@ class IndexController extends AbstractController
         }
 
         curl_close($curl);
+        $this->rawLogging("Unformatted response:\n ".print_r($response, true));
+        $formattedResponse = [];
+        foreach ($response as $responseLine) {
+            $responseParts = explode("=", $responseLine);
+            $formattedResponse[$responseParts[0]] = $responseParts[1];
+        }
 
-        $this->rawLogging("Returning response:\n ".print_r($response, true));
-
-        return $response;
+        $this->rawLogging("Returning response:\n ".print_r($formattedResponse, true));
+        return $formattedResponse;
     }
 
     /**
