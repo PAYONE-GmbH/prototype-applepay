@@ -230,6 +230,7 @@ class IndexController extends AbstractController
             'portalid'                  => $this->getParameter('payone.api.portal_id'),
             'key'                       => $apiKey,
             'aid'                       => $this->getParameter('payone.api.sub_account_id'),
+            'mode'                      => $this->getParameter('payone.api.mode'),
             'currency'                  => 'EUR',
             'clearingtype'              => 'wlt',
             'reference'                 => bin2hex(random_bytes(8)),
