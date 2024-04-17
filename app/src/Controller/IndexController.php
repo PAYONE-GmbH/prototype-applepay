@@ -324,8 +324,8 @@ class IndexController extends AbstractController
     private function createMerchantSession(array $response): array
     {
         return [
-            'epochTimestamp'                    => $response['add_paydata[epochTimestamp]'],
-            'expiresAt'                         => $response['add_paydata[expiresAt]'],
+            'epochTimestamp'                    => (int)$response['add_paydata[epochTimestamp]'],
+            'expiresAt'                         => (int)$response['add_paydata[expiresAt]'],
             'merchantSessionIdentifier'         => $response['add_paydata[merchantSessionIdentifier]'],
             'nonce'                             => $response['add_paydata[nonce]'],
             'merchantIdentifier'                => $response['add_paydata[merchantIdentifier]'],
