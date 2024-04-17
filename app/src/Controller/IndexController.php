@@ -289,13 +289,17 @@ class IndexController extends AbstractController
         curl_setopt($curl, CURLOPT_TIMEOUT, 45);
 
         $result = curl_exec($curl);
+        $this->rawLogging("Executed curl with result:\n ".$result);
         if (curl_error($curl)) {
+            $this->rawLogging("Stopped curl with error:\n ".curl_error($curl));
             $response = "connection-type: 1 - errormessage=" . curl_errno($curl) . ": " . curl_error($curl);
         } else {
-            $response = json_decode($result, true);
+            $response = explode("\n", $result);
         }
 
         curl_close($curl);
+
+        $this->rawLogging("Returning response:\n ".print_r($response, true));
 
         return $response;
     }
