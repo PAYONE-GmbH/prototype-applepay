@@ -238,7 +238,7 @@ class IndexController extends AbstractController
             'country'                   => 'de',
             'wallettype'                => 'APL',
             'add_paydata[action]'       => 'init_applepay_session',
-            'add_paydata[display_name]' => 'Payone Applepay Prototype',
+            'add_paydata[display_name]' => 'Payone Applepay Prototyp',
             'add_paydata[domain_name]'  => $this->getParameter('payone.apple.initiative_context'),
         ];
 
