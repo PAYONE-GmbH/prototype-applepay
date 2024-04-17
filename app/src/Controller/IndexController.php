@@ -305,7 +305,7 @@ class IndexController extends AbstractController
         curl_close($curl);
         $this->rawLogging("Unformatted response:\n ".print_r($response, true));
         $formattedResponse = [];
-        foreach ($response as $key=>$responseLine) {
+        foreach ($response as $responseLine) {
             $responseParts = explode("=", $responseLine);
             if (!isset($responseParts[1])) continue;
             $formattedResponse[$responseParts[0]] = $responseParts[1];
