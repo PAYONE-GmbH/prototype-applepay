@@ -227,7 +227,7 @@ class IndexController extends AbstractController
         $genericRequestData = [
             'request'                   => 'genericpayment',
             'mid'                       => $this->getParameter('payone.api.merchant_id'),
-            'portal_id'                 => $this->getParameter('payone.api.portal_id'),
+            'portalid'                  => $this->getParameter('payone.api.portal_id'),
             'key'                       => $apiKey,
             'aid'                       => $this->getParameter('payone.api.sub_account_id'),
             'currency'                  => 'EUR',
