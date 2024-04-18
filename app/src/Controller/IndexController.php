@@ -44,6 +44,7 @@ class IndexController extends AbstractController
             'api_endpoint' => $this->getParameter('payone.api.endpoint'),
             'mode' => $this->getParameter('payone.api.mode'),
             'merchant_identifier' => $this->getParameter('payone.apple.merchant_identifier'),
+            'merchant_identifier_mass' => $this->getParameter('payone.apple.merchant_identifier_mass'),
             'initiative_context' => $this->getParameter('payone.apple.initiative_context'),
         ]);
     }
@@ -328,7 +329,7 @@ class IndexController extends AbstractController
             'expiresAt'                         => (int)$response['add_paydata[expiresAt]'],
             'merchantSessionIdentifier'         => $response['add_paydata[merchantSessionIdentifier]'],
             'nonce'                             => $response['add_paydata[nonce]'],
-            'merchantIdentifier'                => $response['add_paydata[merchantIdentifier]'],
+            'merchantIdentifier'                => $this->getParameter('payone.apple.merchant_identifier_mass'),
             'domainName'                        => $response['add_paydata[domainName]'],
             'displayName'                       => 'PAYONE Apple Pay Prototyp',
             'signature'                         => $response['add_paydata[signature]'],
