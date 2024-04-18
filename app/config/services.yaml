@@ -12,7 +12,6 @@ parameters:
     payone.api.mode: '%env(PAYONE_MODE)%'
     payone.api.endpoint: '%env(PAYONE_API_ENDPOINT)%'
     payone.apple.merchant_identifier: '%env(APPLE_MERCHANT_IDENTIFIER)%'
-    payone.apple.merchant_identifier_mass: '%env(APPLE_MERCHANT_IDENTIFIER_MASS)%'
     payone.apple.initiative_context: '%env(APPLE_INITIATIVE_CONTEXT)%'
     payone.apple.passphrase: '%env(APPLE_PASSPHRASE)%'
 
