@@ -208,6 +208,10 @@
                 })
             }
 
+            session.oncancel = function(event) {
+                writeDebug('CANCELLED: Apple Pay Session was cancelled.', event);
+            };
+
             session.begin()
         }
 
