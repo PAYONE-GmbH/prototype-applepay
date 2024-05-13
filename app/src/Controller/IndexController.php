@@ -23,7 +23,7 @@ class IndexController extends AbstractController
 
     private Logger $logger;
 
-    private string $massMarkerFile = './.well-known/mass.txt';
+    private string $massMarkerFile = '/app/public/.well-known/mass.txt';
 
     public function __construct(
         private Sdk $payoneSdk,
@@ -345,10 +345,10 @@ class IndexController extends AbstractController
     private function markSessionTypeAsMassEnablement(bool $marked): void
     {
         if ($marked) {
-            // $file = fopen($this->massMarkerFile, 'w');
-            // fclose($file);
+            $file = fopen($this->massMarkerFile, 'w');
+            fclose($file);
         } else {
-            // unlink($this->massMarkerFile);
+            unlink($this->massMarkerFile);
         }
     }
 
