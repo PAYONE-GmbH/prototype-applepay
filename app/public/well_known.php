@@ -1,6 +1,6 @@
 <?php
-const PATH_MASS_MARKER='./well-known/mass.txt';
-const PATH_DOMAIN_VERIFICATION_FILE='./well-known/apple-developer-merchantid-domain-association.txt';
+const PATH_MASS_MARKER='./.well-known/mass.txt';
+const PATH_DOMAIN_VERIFICATION_FILE='./.well-known/apple-developer-merchantid-domain-association.txt';
 const APP_INI_FILE='../.env.local';
 
 // parse config
