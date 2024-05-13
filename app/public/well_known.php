@@ -7,6 +7,7 @@ const APP_INI_FILE='../.env.local';
 $config = parse_ini_file(APP_INI_FILE);
 $useMassEnablement = file_exists(PATH_MASS_MARKER);
 
+echo "<h1>".getcwd()."</h1>";
 // return matching value
 if ($useMassEnablement) {
     echo $config['MASS_ENABLEMENT_DOMAIN_VERIFICATION_KEY'];
