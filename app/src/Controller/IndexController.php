@@ -23,7 +23,7 @@ class IndexController extends AbstractController
 
     private Logger $logger;
 
-    private string $massMarkerFile = './well-known/mass.txt';
+    private string $massMarkerFile = './.well-known/mass.txt';
 
     public function __construct(
         private Sdk $payoneSdk,
