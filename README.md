@@ -18,9 +18,9 @@ Consequentially you should own the following files
 ## Steps to make this run
 
 1. Clone this repository into a dedicated folder on your host-system.
-2. Place `merchant_id.key`, `merchant_id.pem` and `apple-developer-merchantid-domain-association.txt` into folder `import`
-3. From project root folder run `bash bin/apldemo.sh import certs`
-4. From project root folder run `bash bin/apldemo.sh import domain-verification`
+2. (For Non-Mass-Enablement) Place `merchant_id.key`, `merchant_id.pem` and `apple-developer-merchantid-domain-association.txt` into folder `import`
+3. (For Non-Mass-Enablement) From project root folder run `bash bin/apldemo.sh import certs`
+4. (For Non-Mass-Enablement) From project root folder run `bash bin/apldemo.sh import domain-verification`
 5. Configure Payone merchant-data by creating a file `app/.env.local` in the app-directory of the project folder (/app), filled with data like in this example: 
     ```dotenv
     PAYONE_API_ENDPOINT=https://api.pay1.de/post-gateway/
@@ -29,6 +29,11 @@ Consequentially you should own the following files
     PAYONE_PORTAL_ID=1234567
     PAYONE_SUB_ACCOUNT_ID=54321
     PAYONE_KEY=secret
+    # Apple credentials
+    APPLE_MERCHANT_IDENTIFIER=merchant.Payone.ApplePayontheweb
+    APPLE_INITIATIVE_CONTEXT=apldemo.patsy.dev
+    # App parameters
+    MASS_ENABLEMENT_DOMAIN_VERIFICATION_KEY=YOUR_MASS_ENABLEMENT_KEY
     ```  
 6. From project root folder run `bash bin/apldemo.sh build`
 7. From project root folder run `bash bin/apldemo.sh run`
