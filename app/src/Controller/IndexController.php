@@ -248,7 +248,7 @@ class IndexController extends AbstractController
         if (is_array($response)) {
             $this->rawLogging("Calling createMerchantSession");
             $merchantSession = $this->createMerchantSession($response);
-            $debugMessage = ['message' => 'Merchant session created', 'data' => $merchantSession];
+            $debugMessage = ['message' => 'Mass-Enablement merchant session created', 'data' => $merchantSession];
             $this->logger->debug(print_r($debugMessage, true));
             $this->rawLogging(print_r($debugMessage, true));
 
@@ -323,19 +323,13 @@ class IndexController extends AbstractController
      */
     private function createMerchantSession(array $response): array
     {
-        return [
-            'epochTimestamp'                    => (int)$response['add_paydata[epochTimestamp]'],
-            'expiresAt'                         => (int)$response['add_paydata[expiresAt]'],
-            'merchantSessionIdentifier'         => $response['add_paydata[merchantSessionIdentifier]'],
-            'nonce'                             => $response['add_paydata[nonce]'],
-            'merchantIdentifier'                => $response['add_paydata[merchantIdentifier]'],
-            'domainName'                        => $response['add_paydata[domainName]'],
-            'displayName'                       => 'PAYONE Apple Pay Prototyp',
-            'signature'                         => $response['add_paydata[signature]'],
-            'operationalAnalyticsIdentifier'    => $response['add_paydata[operationalAnalyticsIdentifier]'],
-            'retries'                           => (int)$response['add_paydata[retries]'],
-            'pspId'                             => $response['add_paydata[pspId]'],
-        ];
+        $debugMessage = ['message' => 'Payone response for mass enablement call to payone.', 'data' => $response];
+        $this->logger->debug(print_r($debugMessage, true));
+        $this->rawLogging(print_r($debugMessage, true));
+
+        // fetch session from response and return it
+        $merchantSession = base64_decode($response['add_paydata[applepay_payment_session]']);
+        return json_decode($merchantSession, true);
     }
 
 }
