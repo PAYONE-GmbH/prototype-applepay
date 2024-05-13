@@ -345,10 +345,10 @@ class IndexController extends AbstractController
     private function markSessionTypeAsMassEnablement(bool $marked): void
     {
         if ($marked) {
-            $file = fopen($this->massMarkerFile, 'w');
-            fclose($file);
+            // $file = fopen($this->massMarkerFile, 'w');
+            // fclose($file);
         } else {
-            unlink($this->massMarkerFile);
+            // unlink($this->massMarkerFile);
         }
     }
 
