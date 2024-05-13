@@ -9,9 +9,7 @@ $useMassEnablement = file_exists(PATH_MASS_MARKER);
 
 // return matching value
 if ($useMassEnablement) {
-    echo "<h1>MASS-CONFIG</h1>";
     echo $config['MASS_ENABLEMENT_DOMAIN_VERIFICATION_KEY'];
 } else {
-    echo "<h1>FILE-CONTENT</h1>";
     echo file_get_contents(PATH_DOMAIN_VERIFICATION_FILE);
 }
