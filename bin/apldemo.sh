@@ -44,6 +44,10 @@ then
   COMPOSE_YAML="./docker-compose.yml"
 fi
 
+# make sure well-known folder exists and
+mkdir -p ./app/public/.well-known/
+chmod 777 ./app/public/.well-known
+
 # go for commands
 if [[ $INPUT_COMMAND = "$COMMAND_BUILD" ]]
 then
@@ -88,7 +92,6 @@ then
 
   if [[ $IMPORT_COMMAND = "$COMMAND_IMPORT_DOMAIN_VERIFICATION" ]]
   then
-    mkdir -p ./app/public/.well-known/
     cp -v ./import/apple-developer-merchantid-domain-association.txt ./app/public/.well-known/apple-developer-merchantid-domain-association.txt
   fi
 
