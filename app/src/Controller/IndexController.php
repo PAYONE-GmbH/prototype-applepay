@@ -336,7 +336,13 @@ class IndexController extends AbstractController
         return json_decode($merchantSession, true);
     }
 
-    private function markSessionTypeAsMassEnablement(bool $marked)
+    /**
+     * Mark type via file existence for later rewriting
+     *
+     * @param bool $marked
+     * @return void
+     */
+    private function markSessionTypeAsMassEnablement(bool $marked): void
     {
         if ($marked) {
             $file = fopen($this->massMarkerFile, 'w');
