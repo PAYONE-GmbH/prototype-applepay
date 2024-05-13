@@ -23,6 +23,8 @@ class IndexController extends AbstractController
 
     private Logger $logger;
 
+    private string $massMarkerFile = './well-known/mass.txt';
+
     public function __construct(
         private Sdk $payoneSdk,
     ) {
@@ -155,6 +157,7 @@ class IndexController extends AbstractController
     }
 
     protected function createLegacyAppleSession(Request $request) {
+        $this->markSessionTypeAsMassEnablement(false);
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['validation_url'])) {
@@ -222,6 +225,7 @@ class IndexController extends AbstractController
 
     protected function createMassAppleSession(Request $request)
     {
+        $this->markSessionTypeAsMassEnablement(true);
         $apiKey = md5($this->getParameter('payone.api.key'));
 
         $genericRequestData = [
@@ -330,6 +334,16 @@ class IndexController extends AbstractController
         // fetch session from response and return it
         $merchantSession = base64_decode($response['add_paydata[applepay_payment_session]']);
         return json_decode($merchantSession, true);
+    }
+
+    private function markSessionTypeAsMassEnablement(bool $marked)
+    {
+        if ($marked) {
+            $file = fopen($this->massMarkerFile, 'w');
+            fclose($file);
+        } else {
+            unlink($this->massMarkerFile);
+        }
     }
 
 }
