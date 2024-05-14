@@ -18,6 +18,8 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    RewriteRule ^\.well-known\/apple-developer-merchantid-domain-association\.txt$ well_known.php [L]
+
     # This RewriteRule is used to dynamically discover the RewriteBase path.
     # See https://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewriterule
     # Here we will compare the stripped per-dir path *relative to the filesystem

@@ -6,6 +6,9 @@
 parameters:
     payone.container_name: '%env(CONTAINER_NAME)%'
     payone.api.merchant_id: '%env(PAYONE_MERCHANT_ID)%'
+    payone.api.portal_id: '%env(PAYONE_PORTAL_ID)%'
+    payone.api.sub_account_id: '%env(PAYONE_SUB_ACCOUNT_ID)%'
+    payone.api.key: '%env(PAYONE_KEY)%'
     payone.api.mode: '%env(PAYONE_MODE)%'
     payone.api.endpoint: '%env(PAYONE_API_ENDPOINT)%'
     payone.apple.merchant_identifier: '%env(APPLE_MERCHANT_IDENTIFIER)%'
