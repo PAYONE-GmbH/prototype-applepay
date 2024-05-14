@@ -347,7 +347,7 @@ class IndexController extends AbstractController
         if ($marked) {
             $file = fopen($this->massMarkerFile, 'w');
             fclose($file);
-        } else {
+        } else if (file_exists($this->massMarkerFile)) {
             unlink($this->massMarkerFile);
         }
     }
