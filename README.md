@@ -6,7 +6,7 @@ This app enables you to set up an app to place applepay payments in combination 
 
 First you need a host with installed `docker`, `docker-compose` and a `bash`.
 
-Next you need to have a proper configured Payone merchant account as described in https://docs.payone.com/display/public/PLATFORM/Special+Remarks+-+Apple+Pay#SpecialRemarksApplePay-Prerequisites.
+Next you need to have a proper configured Payone merchant account as described in https://docs.payone.com/payment-methods/apple-pay.
 You 
 
 Consequentially you should own the following files
