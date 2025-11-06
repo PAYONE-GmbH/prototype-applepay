@@ -1,6 +1,6 @@
 services:
   apldemo:
-    container_name: apldemo_app_"${CONTAINER_NAME_SUFFIX}"
+    container_name: apldemo_app_${CONTAINER_NAME_SUFFIX}
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -20,7 +20,7 @@ services:
       - apldemo_php
 
   apldemo_php:
-    container_name: apldemo_php
+    container_name: apldemo_php_${CONTAINER_NAME_SUFFIX}
     image: php:8.1-alpine
     restart: unless-stopped
     stdin_open: true
