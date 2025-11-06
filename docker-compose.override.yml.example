@@ -34,3 +34,6 @@ services:
 networks:
   traefik:
     external: true
+  default:
+    external: true
+    name: shop
