@@ -14,8 +14,8 @@ services:
     volumes:
       - ./app:/app
     networks:
-      - default
       - traefik
+      - shop
     depends_on:
       - apldemo_php
 
@@ -29,11 +29,10 @@ services:
     volumes:
       - ./app:/app
     networks:
-      - default
+      - shop
 
 networks:
   traefik:
     external: true
-  default:
+  shop:
     external: true
-    name: shop
