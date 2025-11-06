@@ -17,7 +17,7 @@ services:
       - default
       - traefik
     depends_on:
-      - apldemo_php
+      - php
 
   php:
     container_name: ${PHP_CONTAINER_NAME}
