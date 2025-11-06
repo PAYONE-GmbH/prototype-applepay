@@ -1,6 +1,6 @@
 services:
-  apldemo:
-    container_name: apldemo_app_${CONTAINER_NAME_SUFFIX}
+  webserver:
+    container_name: ${WEBSERVER_CONTAINER_NAME}
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -19,8 +19,8 @@ services:
     depends_on:
       - apldemo_php
 
-  apldemo_php:
-    container_name: apldemo_php_${CONTAINER_NAME_SUFFIX}
+  php:
+    container_name: ${PHP_CONTAINER_NAME}
     image: php:8.1-alpine
     restart: unless-stopped
     stdin_open: true
