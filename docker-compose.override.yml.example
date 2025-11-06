@@ -16,8 +16,6 @@ services:
     networks:
       - default
       - traefik
-    depends_on:
-      - php
 
   php:
     container_name: ${PHP_CONTAINER_NAME}
