@@ -51,26 +51,26 @@ chmod 777 ./app/public/.well-known
 # go for commands
 if [[ $INPUT_COMMAND = "$COMMAND_BUILD" ]]
 then
-  docker-compose -f $COMPOSE_YAML down && docker-compose -f $COMPOSE_YAML build --no-cache
+  docker compose -f $COMPOSE_YAML down && docker compose -f $COMPOSE_YAML build --no-cache
   exit 0
 fi
 
 if [[ $INPUT_COMMAND = "$COMMAND_RUN" ]]
 then
-  docker-compose -f $COMPOSE_YAML up -d
+  docker compose -f $COMPOSE_YAML up -d
   docker exec "apldemo_php_$CONTAINER_NAME_SUFFIX" php /app/composer.phar install --working-dir=/app
   exit 0
 fi
 
 if [[ $INPUT_COMMAND = "$COMMAND_RESTART" ]]
 then
-  docker-compose -f $COMPOSE_YAML restart
+  docker compose -f $COMPOSE_YAML restart
   exit 0
 fi
 
 if [[ $INPUT_COMMAND = "$COMMAND_STOP" ]]
 then
-  docker-compose -f $COMPOSE_YAML stop
+  docker compose -f $COMPOSE_YAML stop
   exit 0
 fi
 

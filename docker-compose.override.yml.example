@@ -1,0 +1,37 @@
+services:
+  webserver:
+    container_name: ${WEBSERVER_CONTAINER_NAME}
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: apldemo
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${TRAEFIK_ROUTER_SERVICE}.entrypoints=web"
+      - "traefik.http.routers.${TRAEFIK_ROUTER_SERVICE}.rule=Host(`${TRAEFIK_HOST_RULE_SERVICE}`)"
+      - "traefik.http.services.${TRAEFIK_ROUTER_SERVICE}.loadbalancer.server.port=80"
+    volumes:
+      - ./app:/app
+    networks:
+      - default
+      - traefik
+
+  php:
+    container_name: ${PHP_CONTAINER_NAME}
+    image: php:8.1-alpine
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: /bin/sh
+    volumes:
+      - ./app:/app
+    networks:
+      - default
+
+networks:
+  traefik:
+    external: true
+  default:
+    external: true
+    name: shop
