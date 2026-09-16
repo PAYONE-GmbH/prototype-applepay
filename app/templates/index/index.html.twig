@@ -148,7 +148,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        validation_url: 'https://apple-pay-gateway.apple.com',
+                        validation_url: '{{ applepay_api_endpoint }}',
                         checkout_variant: selectedCheckoutVariant
                     }),
                     cache: 'no-cache',

@@ -47,6 +47,7 @@ class IndexController extends AbstractController
             'mode' => $this->getParameter('payone.api.mode'),
             'merchant_identifier' => $this->getParameter('payone.apple.merchant_identifier'),
             'initiative_context' => $this->getParameter('payone.apple.initiative_context'),
+            'applepay_api_endpoint' => $this->getParameter('payone.apple.api_endpoint'),
         ]);
     }
 
