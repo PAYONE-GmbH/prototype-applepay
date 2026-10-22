@@ -56,7 +56,7 @@
             <div class="row">
                 <div class="col-12">
                     <div class="info alert-info" style="margin-top: 2em">
-                        <p>Aktuelle Payone Konfiguration:
+                        <p>Payone Configuration:
                             <ul>
                                 <li>mid: {{ merchant_id }}</li>
                                 <li>mode: {{ mode }}</li>
@@ -64,8 +64,9 @@
                                 <li>request: preauthorization</li>
                             </ul>
                         </p>
-                        <p>Aktuelle Apple Konfiguration:
+                        <p>ApplePay Configuration:
                             <ul>
+                                <li>validation_url: {{ applepay_api_endpoint }}</li>
                                 <li>merchant_identifier: {{ merchant_identifier }}</li>
                                 <li>initiative_context: {{ initiative_context }}</li>
                             </ul>
@@ -148,7 +149,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        validation_url: 'https://apple-pay-gateway.apple.com',
+                        validation_url: '{{ applepay_api_endpoint }}',
                         checkout_variant: selectedCheckoutVariant
                     }),
                     cache: 'no-cache',
